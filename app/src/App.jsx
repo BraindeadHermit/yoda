@@ -6,6 +6,7 @@ import LoginPage from './components/pages/LoginPage';
 import { MentorSearchForm } from './components/pages/mentor-search-form';
 import FileHomePage from './components/pages/FileHomePage';
 import FileAddDocument from './components/pages/fileAddDocument';
+import ModifyProfile from './components/pages/ModifyProfile';
 
 
 function App() {

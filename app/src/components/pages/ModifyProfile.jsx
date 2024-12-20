@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"; // Importa il componente Textarea
 import Header from "@/components/ui/header";
 // Importa i moduli necessari da Firebase v9+
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 
 export default function MentorProfileForm() {
@@ -24,7 +24,7 @@ export default function MentorProfileForm() {
   const navigate = useNavigate();
   const auth = getAuth();
   const db = getFirestore();
-  const storageRef = storage().ref();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
