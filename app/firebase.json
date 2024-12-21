@@ -15,14 +15,7 @@
     "ui": {
       "enabled": true
     },
-    "singleProjectMode": true,
-    "dataconnect": {
-      "dataDir": "dataconnect/.dataconnect/pgliteData",
-      "port": 9399
-    }
-  },
-  "dataconnect": {
-    "source": "dataconnect"
+    "singleProjectMode": true
   },
   "firestore": {
     "rules": "firestore.rules",
