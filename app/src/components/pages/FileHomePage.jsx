@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from 'react'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Link } from 'react-router-dom'
 
 export default function DocumentLibrary() {
   const [documents, setDocuments] = useState([])
@@ -40,6 +41,17 @@ export default function DocumentLibrary() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-semibold text-white mb-6">Contenuti Media</h2>
+        
+        {/* Add Document Button */}
+        <div className="mb-6">
+          <Link
+            to="/addfile"
+            className="bg-[#178563] hover:bg-[#178563]/90 text-white px-4 py-2 rounded-md"
+          >
+            Aggiungi Documento
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {documents.map((doc) => (
             <Card key={doc.id} className="hover:shadow-lg transition-shadow rounded-xl">

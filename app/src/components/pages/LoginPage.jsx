@@ -62,11 +62,11 @@ export default function LoginPage() {
   
             // Naviga in base al tipo di utente
             if (userType === "mentee") {
-              console.log("Tipo di utente: mentee. Navigo verso '/dettaglimentee'");
-              navigate("/dettaglimentee", { state: { userName, userType } });
+              console.log("Tipo di utente: mentee. Navigo verso '/HomePageMentee'");
+              navigate("/HomePageMentee", { state: { userName, userType } });
             } else if (userType === "mentor") {
-              console.log("Tipo di utente: mentor. Navigo verso '/dettaglimentore'");
-              navigate("/dettaglimentore", { state: { userName, userType } });
+              console.log("Tipo di utente: mentor. Navigo verso '/HomePageMentore'");
+              navigate("/HomePageMentore", { state: { userName, userType } });
             } else {
               console.error("Tipo di utente non riconosciuto:", userType);
               setError("Tipo di utente non riconosciuto.");
