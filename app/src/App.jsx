@@ -15,6 +15,7 @@ import DettaglioVideo from './components/pages/DettaglioVideo';
 
 import MentorProfileForm from './components/pages/ModifyProfile';
 import DettagliUtenteWrapper from './components/pages/DettaglioUtente';
+import MatchingResultPage from './components/pages/MatchingResultPage';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/InserireVideo" element={<InserireVideo />} />
         <Route path="/videos" element={<Video />} />
         <Route path="/video/:id" element={<DettaglioVideo />} />
+        <Route path="/matchingpage" element={<MatchingResultPage />} />
       </Routes>
     </BrowserRouter>
   );
