@@ -16,21 +16,33 @@ import { Label } from "@/components/ui/label";
 import { useMentorSearch } from "../../auth/mentor-search-logic";
 
 export function MentorSearchForm() {
-  // Custom hook per la ricerca
-  const { mentors, loading, error, searchMentors } = useMentorSearch();
+  const { mentors, loading: searchLoading, error, searchMentors } = useMentorSearch();
 
-  // Stato per i criteri di ricerca
+  const [loading, setLoading] = React.useState(false); // Aggiunto stato per il caricamento locale
+
   const [criteria, setCriteria] = React.useState({
-    field: "",
-    occupation: "",
+    occupation: "", // Campo principale per la ricerca
     availability: 1,
     meetingMode: "online",
   });
+  
 
-  // Gestisce la ricerca dei mentori
   const handleSearch = async () => {
-    await searchMentors(criteria);
+    setLoading(true); // Imposta lo stato di caricamento
+    try {
+      await searchMentors({ 
+        occupation: criteria.occupation, 
+        availability: criteria.availability, 
+        meetingMode: criteria.meetingMode 
+      });
+      
+    } catch (err) {
+      console.error("Errore durante la ricerca:", err);
+    } finally {
+      setLoading(false); // Ripristina lo stato di caricamento
+    }
   };
+  
 
   const handleInclusion = () => {
     // Logica per gestire il pulsante di inclusione femminile
@@ -54,7 +66,7 @@ export function MentorSearchForm() {
                 <Label>Campo di Interesse</Label>
                 <Select
                   onValueChange={(value) =>
-                    setCriteria((prev) => ({ ...prev, field: value }))
+                    setCriteria((prev) => ({ ...prev, occupation: value }))
                   }
                 >
                   <SelectTrigger>
@@ -62,65 +74,33 @@ export function MentorSearchForm() {
                   </SelectTrigger>
                   <SelectContent>
                   <SelectContent>
-  <SelectItem value="software-development">Sviluppo Software</SelectItem>
-  <SelectItem value="web-development">Sviluppo Web</SelectItem>
-  <SelectItem value="mobile-development">Sviluppo Mobile</SelectItem>
-  <SelectItem value="data-science">Data Science</SelectItem>
-  <SelectItem value="machine-learning">Machine Learning</SelectItem>
-  <SelectItem value="artificial-intelligence">Intelligenza Artificiale</SelectItem>
-  <SelectItem value="cybersecurity">Cybersecurity</SelectItem>
-  <SelectItem value="cloud-computing">Cloud Computing</SelectItem>
-  <SelectItem value="networking">Networking</SelectItem>
-  <SelectItem value="devops">DevOps</SelectItem>
-  <SelectItem value="blockchain">Blockchain</SelectItem>
-  <SelectItem value="game-development">Sviluppo Videogiochi</SelectItem>
-  <SelectItem value="it-support">Supporto IT</SelectItem>
-  <SelectItem value="ui-ux-design">Design UI/UX</SelectItem>
-  <SelectItem value="software-testing">Testing Software</SelectItem>
-  <SelectItem value="database-administration">Amministrazione Database</SelectItem>
-  <SelectItem value="robotics">Robotica</SelectItem>
-  <SelectItem value="iot">Internet of Things (IoT)</SelectItem>
-  <SelectItem value="digital-transformation">Trasformazione Digitale</SelectItem>
-  <SelectItem value="big-data">Big Data</SelectItem>
-</SelectContent>
+        <SelectItem value="software-development">Sviluppo Software</SelectItem>
+        <SelectItem value="web-development">Sviluppo Web</SelectItem>
+        <SelectItem value="mobile-development">Sviluppo Mobile</SelectItem>
+        <SelectItem value="data-science">Data Science</SelectItem>
+        <SelectItem value="machine-learning">Machine Learning</SelectItem>
+        <SelectItem value="artificial-intelligence">
+          Intelligenza Artificiale
+        </SelectItem>
+        <SelectItem value="cybersecurity">Cybersecurity</SelectItem>
+        <SelectItem value="cloud-computing">Cloud Computing</SelectItem>
+        <SelectItem value="networking">Networking</SelectItem>
+        <SelectItem value="devops">DevOps</SelectItem>
+        <SelectItem value="blockchain">Blockchain</SelectItem>
+        <SelectItem value="game-development">Sviluppo Videogiochi</SelectItem>
+        <SelectItem value="it-support">Supporto IT</SelectItem>
+        <SelectItem value="ui-ux-design">Design UI/UX</SelectItem>
+        <SelectItem value="software-testing">Testing Software</SelectItem>
+        <SelectItem value="database-administration">
+          Amministrazione Database
+        </SelectItem>
+        <SelectItem value="robotics">Robotica</SelectItem>
+        <SelectItem value="iot">Internet of Things (IoT)</SelectItem>
+        <SelectItem value="digital-transformation">
+          Trasformazione Digitale
+        </SelectItem>
+        <SelectItem value="big-data">Big Data</SelectItem>
 
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Occupazione del Mentore */}
-              <div>
-                <Label>Occupazione del Mentore</Label>
-                <Select
-                  onValueChange={(value) =>
-                    setCriteria((prev) => ({ ...prev, occupation: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleziona occupazione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                  <SelectContent>
-  <SelectItem value="developer">Sviluppatore</SelectItem>
-  <SelectItem value="web-developer">Sviluppatore Web</SelectItem>
-  <SelectItem value="mobile-developer">Sviluppatore Mobile</SelectItem>
-  <SelectItem value="data-scientist">Data Scientist</SelectItem>
-  <SelectItem value="ml-engineer">Machine Learning Engineer</SelectItem>
-  <SelectItem value="ai-specialist">Specialista AI</SelectItem>
-  <SelectItem value="cybersecurity-expert">Esperto Cybersecurity</SelectItem>
-  <SelectItem value="cloud-architect">Cloud Architect</SelectItem>
-  <SelectItem value="network-engineer">Network Engineer</SelectItem>
-  <SelectItem value="devops-engineer">DevOps Engineer</SelectItem>
-  <SelectItem value="blockchain-developer">Blockchain Developer</SelectItem>
-  <SelectItem value="game-developer">Game Developer</SelectItem>
-  <SelectItem value="it-support-specialist">Specialista Supporto IT</SelectItem>
-  <SelectItem value="ui-ux-designer">UI/UX Designer</SelectItem>
-  <SelectItem value="qa-engineer">Quality Assurance Engineer</SelectItem>
-  <SelectItem value="database-admin">Database Administrator</SelectItem>
-  <SelectItem value="robotics-engineer">Robotics Engineer</SelectItem>
-  <SelectItem value="iot-developer">IoT Developer</SelectItem>
-  <SelectItem value="digital-transformation-lead">Lead Trasformazione Digitale</SelectItem>
-  <SelectItem value="big-data-analyst">Analista Big Data</SelectItem>
 </SelectContent>
 
                   </SelectContent>
