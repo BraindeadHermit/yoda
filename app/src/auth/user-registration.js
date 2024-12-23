@@ -1,6 +1,8 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 import app from "@/firebase/firebase";
+import { storage } from "@/firebase/firebase";
 
 // Funzione di registrazione
 async function registerUser(formData, portfolioProjects) {
@@ -17,6 +19,7 @@ async function registerUser(formData, portfolioProjects) {
     // Ottieni l'istanza di Firestore
     const db = getFirestore(app);
 
+
     // Crea un documento utente in Firestore
     const userData = {
       nome: formData.nome,
@@ -26,13 +29,31 @@ async function registerUser(formData, portfolioProjects) {
       dataNascita: formData.dataDiNascita,
       titoloDiStudio: formData.titoloDiStudio,
       competenze: formData.competenze,
-      occupazione: formData.occupazione,
+      occupazione: formData.occupazione, // Ora accetta valori aggiornati come "developer", "web-developer", ecc.
       userType: formData.userType,
       portfolioProjects: portfolioProjects || [],
       cv: formData.cv ? formData.cv.name : null, // Salva il nome del file CV
+      createdAt: new Date().toISOString(), // Aggiunto per tracciare la data di registrazione
     };
 
+    if (formData.userType === "mentor") {
+      userData.availability = formData.availability || 0; // Salva la disponibilità
+    }
     
+    if (formData.cv) {
+      const file = formData.cv; // Il file CV da `formData`
+      const uniqueFileName = `${userId}_${file.name}`; // Nome unico basato sull'ID utente
+      const fileRef = ref(storage, `user_uploads/${userId}/${uniqueFileName}`);
+
+      // Carica il file su Firebase Storage
+      await uploadBytes(fileRef, file);
+
+      // Aggiorna il campo `cv` con il percorso del file
+      userData.cv = uniqueFileName;
+    }
+
+    // Scrivi i dati utente su Firestore
+    await setDoc(doc(db, "utenti", userId), userData);
 
     console.log("Utente registrato con successo!", userId);
     return { success: true, userId: userId };

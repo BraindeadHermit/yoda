@@ -2,35 +2,55 @@ import { useState, useEffect } from 'react';
 import { Search, Bell, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [userType, setUserType] = useState(null); // Stato per memorizzare il tipo di utente
   const navigate = useNavigate();
   const auth = getAuth();
+  const db = getFirestore(); // Inizializza Firestore
 
   // Controlla lo stato di autenticazione
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        try {
+          // Recupera i dettagli dell'utente da Firestore
+          const userDocRef = doc(db, 'utenti', currentUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserType(userData.userType); // Imposta il tipo di utente
+          }
+        } catch (error) {
+          console.error('Errore nel recupero dei dettagli dell\'utente:', error);
+        }
+      } else {
+        setUserType(null); // Se non c'è un utente loggato, resetta il tipo
+      }
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, db]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
-const handleLogout = async () => {
-  try {
-    await signOut(auth);
-    setUser(null);
-    navigate('/login', { state: { message: 'Logout effettuato con successo' } }); // Passa il messaggio
-  } catch (error) {
-    console.error('Errore durante il logout:', error);
-  }
-};
-
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserType(null);
+      navigate('/login', { state: { message: 'Logout effettuato con successo' } }); // Passa il messaggio
+    } catch (error) {
+      console.error('Errore durante il logout:', error);
+    }
+  };
 
   return (
     <header className="bg-white border-b border-green-200 px-6 py-3">
@@ -44,6 +64,28 @@ const handleLogout = async () => {
             Piattaforma di Mentorship
           </span>
         </div>
+
+        {/* Menu di navigazione */}
+        <nav className="flex space-x-8">
+          <Link
+            to="/contents"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            CONTENUTI
+          </Link>
+          <Link
+            to="/videos"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            VIDEO
+          </Link>
+          <Link
+            to="/personal-area"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            AREA PERSONALE
+          </Link>
+        </nav>
 
         {/* Barra di ricerca */}
         <div className="flex-1 max-w-xl mx-8">
@@ -79,11 +121,39 @@ const handleLogout = async () => {
                     >
                       Profilo
                     </Link>
+
+                    {/* Mostra opzioni diverse in base al tipo di utente */}
+                    {userType === 'mentor' ? (
+                      <>
+                        <Link
+                          to="/mentorship"
+                          className="block px-4 py-2 text-sm text-green-700 hover:bg-green-100"
+                        >
+                          Mentorship
+                        </Link>
+                        <Link
+                          to="/Calendar"
+                          className="block px-4 py-2 text-sm text-green-700 hover:bg-green-100"
+                        >
+                          Calendario Meetings
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/sessions"
+                          className="block px-4 py-2 text-sm text-green-700 hover:bg-green-100"
+                        >
+                          Sessioni Mentorship
+                        </Link>
+                      </>
+                    )}
+
                     <Link
-                      to="/settings"
+                      to="/portfolio"
                       className="block px-4 py-2 text-sm text-green-700 hover:bg-green-100"
                     >
-                      Impostazioni
+                      Portfolio
                     </Link>
                     <button
                       onClick={handleLogout}
