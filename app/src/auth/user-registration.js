@@ -1,7 +1,8 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-
+import { ref, uploadBytes } from "firebase/storage";
 import app from "@/firebase/firebase";
+import { storage } from "@/firebase/firebase";
 
 // Funzione di registrazione
 async function registerUser(formData, portfolioProjects) {
@@ -39,6 +40,17 @@ async function registerUser(formData, portfolioProjects) {
       userData.availability = formData.availability || 0; // Salva la disponibilità
     }
     
+    if (formData.cv) {
+      const file = formData.cv; // Il file CV da `formData`
+      const uniqueFileName = `${userId}_${file.name}`; // Nome unico basato sull'ID utente
+      const fileRef = ref(storage, `user_uploads/${userId}/${uniqueFileName}`);
+
+      // Carica il file su Firebase Storage
+      await uploadBytes(fileRef, file);
+
+      // Aggiorna il campo `cv` con il percorso del file
+      userData.cv = uniqueFileName;
+    }
 
     // Scrivi i dati utente su Firestore
     await setDoc(doc(db, "utenti", userId), userData);

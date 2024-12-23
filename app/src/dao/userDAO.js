@@ -1,9 +1,11 @@
 // Importa i metodi necessari da Firebase Firestore
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, getDoc, doc } from "firebase/firestore";
+import {storage,app} from "@/firebase/firebase";
 // Inizializza Firestore
 const db = getFirestore();
 const auth = getAuth();
+
 
 //DAO per l'utente e le varie funzionalità
 

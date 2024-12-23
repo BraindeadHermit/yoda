@@ -15,12 +15,13 @@ const firebaseConfig = {
 // Inizializza Firebase
 const app = initializeApp(firebaseConfig);
 
-// Aggiungi la configurazione per l'emulatore di Firebase Storage, se siamo in localhost
+// Configura Firebase Storage
 const storage = getStorage(app);
 if (window.location.hostname === "localhost") {
     // Connetti l'emulatore di Firebase Storage alla porta 9199
     connectStorageEmulator(storage, "localhost", 9199);
 }
 
-// Esporta l'app come export default
+// Esporta app e storage
+export { app, storage };
 export default app;
