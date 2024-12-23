@@ -74,7 +74,7 @@ const handleFileChange = (event) => {
       if (!formData.userType) newErrors.userType = 'Tipo di utente è obbligatorio';
       if (!formData.titoloDiStudio) newErrors.titoloDiStudio = 'Titolo di studio è obbligatorio';
       if (!formData.competenze) newErrors.competenze = 'Competenze sono obbligatorie';
-      if (!formData.occupazione) newErrors.occupazione = 'Occupazione è obbligatorio';
+      
       if (formData.userType === "mentor") {
         if (
           !formData.availability ||
@@ -83,8 +83,13 @@ const handleFileChange = (event) => {
         ) {
           newErrors.availability = "Seleziona una disponibilità valida (1-10 ore)";
         }
+      } else if (formData.userType === "mentee") {
+        if (!formData.field) {
+          newErrors.field = "Campo di interesse è obbligatorio per i Mentee";
+        }
       }
     }
+    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -104,9 +109,11 @@ const handleFileChange = (event) => {
           ...formData,
           cv: selectedFile, // Include il file selezionato
           availability: formData.userType === "mentor" ? formData.availability : null,
+          field: formData.userType === "mentee" ? formData.field : null, // Include il campo di interesse per i Mentee
         },
         portfolioProjects
       );
+      
   
       if (response.success) {
         // Ottieni l'ID utente registrato
@@ -335,42 +342,104 @@ const handleFileChange = (event) => {
                     />
                     {errors.competenze && <p id="competenze-error" className="text-red-500 text-sm">{errors.competenze}</p>}
                   </div>
-                  <Label htmlFor="occupazione">Settore IT</Label>
-                  <Select
-                    value={formData.occupazione}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, occupazione: value }))}
-                  >
-                    <SelectTrigger id="occupazione">
-                      <SelectValue placeholder="Seleziona la tua occupazione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="developer">Sviluppatore</SelectItem>
-                      <SelectItem value="web-developer">Sviluppatore Web</SelectItem>
-                      <SelectItem value="mobile-developer">Sviluppatore Mobile</SelectItem>
-                      <SelectItem value="data-scientist">Data Scientist</SelectItem>
-                      <SelectItem value="ml-engineer">Machine Learning Engineer</SelectItem>
-                      <SelectItem value="ai-specialist">Specialista AI</SelectItem>
-                      <SelectItem value="cybersecurity-expert">Esperto Cybersecurity</SelectItem>
-                      <SelectItem value="cloud-architect">Cloud Architect</SelectItem>
-                      <SelectItem value="network-engineer">Network Engineer</SelectItem>
-                      <SelectItem value="devops-engineer">DevOps Engineer</SelectItem>
-                      <SelectItem value="blockchain-developer">Blockchain Developer</SelectItem>
-                      <SelectItem value="game-developer">Game Developer</SelectItem>
-                      <SelectItem value="it-support-specialist">Specialista Supporto IT</SelectItem>
-                      <SelectItem value="ui-ux-designer">UI/UX Designer</SelectItem>
-                      <SelectItem value="qa-engineer">Quality Assurance Engineer</SelectItem>
-                      <SelectItem value="database-admin">Database Administrator</SelectItem>
-                      <SelectItem value="robotics-engineer">Robotics Engineer</SelectItem>
-                      <SelectItem value="iot-developer">IoT Developer</SelectItem>
-                      <SelectItem value="digital-transformation-lead">Lead Trasformazione Digitale</SelectItem>
-                      <SelectItem value="big-data-analyst">Analista Big Data</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.occupazione && <p id="occupazione-error" className="text-red-500 text-sm">{errors.occupazione}</p>}
-                  <div className="space-y-2">
+                  {userType === "mentor" && (
+  <div>
+    <Label htmlFor="occupazione">Settore IT</Label>
+    <Select
+      value={formData.occupazione}
+      onValueChange={(value) =>
+        setFormData((prev) => ({ ...prev, occupazione: value }))
+      }
+    >
+      <SelectTrigger id="occupazione">
+        <SelectValue placeholder="Seleziona la tua occupazione" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="software-development">Sviluppo Software</SelectItem>
+        <SelectItem value="web-development">Sviluppo Web</SelectItem>
+        <SelectItem value="mobile-development">Sviluppo Mobile</SelectItem>
+        <SelectItem value="data-science">Data Science</SelectItem>
+        <SelectItem value="machine-learning">Machine Learning</SelectItem>
+        <SelectItem value="artificial-intelligence">
+          Intelligenza Artificiale
+        </SelectItem>
+        <SelectItem value="cybersecurity">Cybersecurity</SelectItem>
+        <SelectItem value="cloud-computing">Cloud Computing</SelectItem>
+        <SelectItem value="networking">Networking</SelectItem>
+        <SelectItem value="devops">DevOps</SelectItem>
+        <SelectItem value="blockchain">Blockchain</SelectItem>
+        <SelectItem value="game-development">Sviluppo Videogiochi</SelectItem>
+        <SelectItem value="it-support">Supporto IT</SelectItem>
+        <SelectItem value="ui-ux-design">Design UI/UX</SelectItem>
+        <SelectItem value="software-testing">Testing Software</SelectItem>
+        <SelectItem value="database-administration">
+          Amministrazione Database
+        </SelectItem>
+        <SelectItem value="robotics">Robotica</SelectItem>
+        <SelectItem value="iot">Internet of Things (IoT)</SelectItem>
+        <SelectItem value="digital-transformation">
+          Trasformazione Digitale
+        </SelectItem>
+        <SelectItem value="big-data">Big Data</SelectItem>
+      </SelectContent>
+    </Select>
+    {errors.occupazione && (
+      <p id="occupazione-error" className="text-red-500 text-sm">
+        {errors.occupazione}
+      </p>
+    )}
+  </div>
+)}
 
-                  </div>
 
+{userType === "mentee" && (
+  <div>
+    <Label htmlFor="field">Campo di Interesse</Label>
+    <Select
+      value={formData.field}
+      onValueChange={(value) =>
+        setFormData((prev) => ({ ...prev, field: value }))
+      }
+    >
+      <SelectTrigger id="field">
+        <SelectValue placeholder="Seleziona il tuo campo di interesse" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="software-development">Sviluppo Software</SelectItem>
+        <SelectItem value="web-development">Sviluppo Web</SelectItem>
+        <SelectItem value="mobile-development">Sviluppo Mobile</SelectItem>
+        <SelectItem value="data-science">Data Science</SelectItem>
+        <SelectItem value="machine-learning">Machine Learning</SelectItem>
+        <SelectItem value="artificial-intelligence">
+          Intelligenza Artificiale
+        </SelectItem>
+        <SelectItem value="cybersecurity">Cybersecurity</SelectItem>
+        <SelectItem value="cloud-computing">Cloud Computing</SelectItem>
+        <SelectItem value="networking">Networking</SelectItem>
+        <SelectItem value="devops">DevOps</SelectItem>
+        <SelectItem value="blockchain">Blockchain</SelectItem>
+        <SelectItem value="game-development">Sviluppo Videogiochi</SelectItem>
+        <SelectItem value="it-support">Supporto IT</SelectItem>
+        <SelectItem value="ui-ux-design">Design UI/UX</SelectItem>
+        <SelectItem value="software-testing">Testing Software</SelectItem>
+        <SelectItem value="database-administration">
+          Amministrazione Database
+        </SelectItem>
+        <SelectItem value="robotics">Robotica</SelectItem>
+        <SelectItem value="iot">Internet of Things (IoT)</SelectItem>
+        <SelectItem value="digital-transformation">
+          Trasformazione Digitale
+        </SelectItem>
+        <SelectItem value="big-data">Big Data</SelectItem>
+      </SelectContent>
+    </Select>
+    {errors.field && (
+      <p id="field-error" className="text-red-500 text-sm">
+        {errors.field}
+      </p>
+    )}
+  </div>
+)}
 
 
                   {userType === "mentor" && (
@@ -398,6 +467,27 @@ const handleFileChange = (event) => {
                       )}
                     </div>
                   )}
+{userType === "mentor" && (
+  <div>
+    {/* Stringa impiego per i mentor */}
+    <Label htmlFor="impiego">Impiego</Label>
+    <input
+      type="text"
+      id="impiego"
+      value={formData.impiego}
+      onChange={(e) =>
+        setFormData((prev) => ({ ...prev, impiego: e.target.value }))
+      }
+      placeholder="Inserisci il tuo impiego"
+      className="border border-gray-300 rounded px-2 py-1 w-full"
+    />
+    {errors.impiego && (
+      <p id="impiego-error" className="text-red-500 text-sm">
+        {errors.impiego}
+      </p>
+    )}
+  </div>
+)}
 
 
 
