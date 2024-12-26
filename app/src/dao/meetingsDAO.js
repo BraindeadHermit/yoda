@@ -1,5 +1,5 @@
 import { db } from "@/firebase/firebase";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc } from 'firebase/firestore';
 
 /**
  * Recupera gli incontri di un mentor dal database.
@@ -78,4 +78,27 @@ export const updateMeeting = async (meetingId, updatedData) => {
   
     return Array.from(new Set(daysWithMeetings));
   };
+  export const getMentees = async () => {
+    try {
+      const menteeQuery = query(collection(db, 'utenti'), where('userType', '==', 'mentee'));
+      const querySnapshot = await getDocs(menteeQuery);
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+    } catch (error) {
+      console.error('Errore durante il recupero dei mentee:', error);
+      throw error;
+    }
+  };
   
+  // Crea un nuovo incontro
+  export const createMeeting = async (meetingData) => {
+    try {
+      const docRef = await addDoc(collection(db, 'meetings'), meetingData);
+      return docRef.id; // Restituisce l'ID del documento appena creato
+    } catch (error) {
+      console.error('Errore durante la creazione dell\'incontro:', error);
+      throw error;
+    }
+  };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { getMentees, createMeeting } from "@/dao/meetingsDAO";
 import Header from "@/components/ui/header";
 
 const MeetingScheduler = () => {
@@ -15,8 +16,6 @@ const MeetingScheduler = () => {
   });
 
   const auth = getAuth();
-  const db = getFirestore(); // Inizializza Firestore
-
   // Controllo se l'utente è un mentor e recupero i partecipanti (mentees)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -28,17 +27,16 @@ const MeetingScheduler = () => {
       }
     });
 
-    const fetchMentees = async () => {
-      const menteeQuery = query(collection(db, 'utenti'), where('userType', '==', 'mentee'));
-      const querySnapshot = await getDocs(menteeQuery);
-      const menteeList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setMentees(menteeList);
+    const fetchMenteesData = async () => {
+      try {
+        const menteesList = await getMentees();
+        setMentees(menteesList);
+      } catch (error) {
+        console.error('Errore durante il recupero dei mentee:', error);
+      }
     };
 
-    fetchMentees();
+    fetchMenteesData();
     return () => unsubscribe();
   }, [auth]);
 
@@ -99,7 +97,7 @@ const MeetingScheduler = () => {
           menteeEmail: selectedParticipant.email,
         };
 
-        await addDoc(collection(db, 'meetings'), newMeeting);
+        await createMeeting(newMeeting);
         alert('Incontro programmato con successo');
       } catch (error) {
         console.error('Errore nella programmazione dell\'incontro: ', error);
