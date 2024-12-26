@@ -1,46 +1,34 @@
+// Updated CalendarioIncontri.js with Edit and Delete
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import Header from "@/components/ui/header";
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { fetchMeetingsForMentor, filterDaysWithMeetings, updateMeeting, deleteMeeting } from "@/dao/meetingsDAO"
 
 const CalendarioIncontri = () => {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const [meetings, setMeetings] = useState([]);
   const [daysWithMeetings, setDaysWithMeetings] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [editingMeeting, setEditingMeeting] = useState(null);
 
   const auth = getAuth();
-  const db = getFirestore();
 
   const fetchMeetings = async () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        const mentorId = currentUser.uid;
-
-        const meetingsQuery = query(
-          collection(db, 'meetings'),
-          where('mentorId', '==', mentorId)
-        );
-        
-        const querySnapshot = await getDocs(meetingsQuery);
-        const fetchedMeetings = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          const date = data.date.toDate();
-          return {
-            id: doc.id,
-            menteeName: data.menteeName,
-            date: date,
-            time: data.time,
-            description: data.description,
-            topic: data.topic,
-          };
-        });
-        
-        setMeetings(fetchedMeetings);
+        try {
+          const fetchedMeetings = await fetchMeetingsForMentor(currentUser.uid);
+          console.log('Utente autenticato:', currentUser.uid);
+          console.log('Incontri recuperati:', meetings);
+          setMeetings(fetchedMeetings);
+        } catch (error) {
+          alert("Errore durante il recupero degli incontri.");
+          console.error(error);
+        }
       } else {
         alert('Accesso negato. Solo i mentor possono accedere a questa pagina.');
       }
@@ -49,19 +37,42 @@ const CalendarioIncontri = () => {
     return () => unsubscribe();
   };
 
+  const handleEdit = (meeting) => {
+    setEditingMeeting(meeting);
+  };
+
+  const handleSaveEdit = async (updatedMeeting) => {
+    console.log("Tentativo di aggiornamento:", updatedMeeting);
+    try {
+      await updateMeeting(updatedMeeting.id, updatedMeeting);
+      setMeetings((prevMeetings) =>
+        prevMeetings.map((m) => (m.id === updatedMeeting.id ? updatedMeeting : m))
+      );
+      setEditingMeeting(null);
+      console.log("Incontro aggiornato con successo.");
+    } catch (error) {
+      console.error("Errore:", error);
+    }
+  };
+
+  const handleDelete = async (meetingId) => {
+    console.log("Tentativo di eliminazione incontro con ID:", meetingId);
+    try {
+      await deleteMeeting(meetingId);
+      console.log("Incontro eliminato con successo.");
+      setMeetings((prevMeetings) => prevMeetings.filter((m) => m.id !== meetingId));
+    } catch (error) {
+      console.error("Errore:", error);
+    }
+  };
+
   useEffect(() => {
     fetchMeetings();
   }, [auth]);
 
   useEffect(() => {
-    const filteredDays = meetings
-      .filter(meeting => {
-        const meetingDate = meeting.date;
-        return meetingDate.getMonth() === currentMonth && meetingDate.getFullYear() === currentYear;
-      })
-      .map(meeting => meeting.date.getDate());
-
-    setDaysWithMeetings([...new Set(filteredDays)]);
+    const filteredDays = filterDaysWithMeetings(meetings, currentMonth, currentYear);
+    setDaysWithMeetings(filteredDays);
   }, [currentMonth, currentYear, meetings]);
 
   const changeMonth = (direction) => {
@@ -93,10 +104,10 @@ const CalendarioIncontri = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
       <Header />
-      
+
       <div style={{
-        background: 'linear-gradient(180deg, #10B981 0%, #ffffff 100%)', // Gradiente verde a bianco
-        padding: '20px 0',  // Elimina spazio tra l'header e il contenuto
+        background: 'linear-gradient(180deg, #10B981 0%, #ffffff 100%)',
+        padding: '20px 0',
       }}>
         <div style={{
           maxWidth: '800px',
@@ -171,7 +182,7 @@ const CalendarioIncontri = () => {
               {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }, (_, i) => {
                 const day = i + 1;
                 const hasMeeting = daysWithMeetings.includes(day);
-                
+
                 return (
                   <div
                     key={day}
@@ -203,8 +214,8 @@ const CalendarioIncontri = () => {
               })}
             </div>
           </div>
-                  {/* Upcoming Meetings Section */}
-                  <h2 style={{
+          {/* Upcoming Meetings Section */}
+          <h2 style={{
             fontSize: '20px',
             color: 'black',
             marginBottom: '16px'
@@ -242,7 +253,7 @@ const CalendarioIncontri = () => {
                 </div>
 
                 {/* Meeting Details */}
-                <div>
+                <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: '500' }}>
                     Incontro con {meeting.menteeName}
                   </div>
@@ -253,19 +264,40 @@ const CalendarioIncontri = () => {
                     {meeting.date.toLocaleDateString()}, {meeting.time}
                   </div>
                 </div>
+
+                {/* Action Buttons */}
+                <Button
+                  onClick={() => handleEdit(meeting)}
+                  style={{
+                    backgroundColor: '#10B981',
+                    color: 'white',
+                    marginRight: '8px',
+                  }}
+                >
+                  Modifica
+                </Button>
+                <Button
+                  onClick={() => handleDelete(meeting.id)}
+                  style={{
+                    backgroundColor: '#EF4444',
+                    color: 'white',
+                  }}
+                >
+                  Elimina
+                </Button>
               </div>
             ))}
           </div>
-          
+
           {/* Add Meeting Button */}
           <Link to="/MeetingScheduler">
-            <Button 
-              variant="solid" 
-              color="green" 
+            <Button
+              variant="solid"
+              color="green"
               className="flex items-center gap-2 w-full justify-center p-4 mt-6"
               style={{
-                backgroundColor: '#10B981', // Bottone verde
-                color: 'white', // Parole bianche
+                backgroundColor: '#10B981',
+                color: 'white',
               }}
             >
               <span className="text-white text-lg font-medium">+</span>
@@ -274,6 +306,125 @@ const CalendarioIncontri = () => {
           </Link>
         </div>
       </div>
+
+      {/* Edit Meeting Form */}
+      {editingMeeting && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              width: '400px',
+            }}
+          >
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Modifica Incontro</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const updatedMeeting = {
+                  ...editingMeeting,
+                  menteeName: e.target.menteeName.value,
+                  date: new Date(e.target.date.value),
+                  time: e.target.time.value,
+                  description: e.target.description.value,
+                  topic: e.target.topic.value,
+                };
+                handleSaveEdit(updatedMeeting);
+              }}
+            >
+              <div style={{ marginBottom: '8px' }}>
+                <label>Nome Mentee</label>
+                <input
+                  name="menteeName"
+                  defaultValue={editingMeeting.menteeName}
+                  disabled
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <label>Data</label>
+                <input
+                  name="date"
+                  type="date"
+                  defaultValue={editingMeeting.date.toISOString().substr(0, 10)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <label>Ora</label>
+                <input
+                  name="time"
+                  type="time"
+                  defaultValue={editingMeeting.time}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <label>Descrizione</label>
+                <textarea
+                  name="description"
+                  defaultValue={editingMeeting.description}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label>Argomento</label>
+                <input
+                  name="topic"
+                  defaultValue={editingMeeting.topic}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button
+                  type="submit"
+                  style={{
+                    backgroundColor: '#10B981',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Salva
+                </Button>
+                <Button
+                  onClick={() => setEditingMeeting(null)}
+                  style={{
+                    backgroundColor: '#EF4444',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Annulla
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
