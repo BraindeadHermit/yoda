@@ -12,6 +12,10 @@ import { X, Plus } from 'lucide-react'
 import { toast } from "@/hooks/use-toast"
 import Header from "@/components/ui/Header"
 import { registerUser } from '@/auth/user-registration'
+import { useNavigate } from "react-router-dom";
+
+
+
 
 
 function RegistrationForm() {
@@ -28,7 +32,8 @@ function RegistrationForm() {
     competenze: '',
     occupazione: '',
     cv: null,
-    userType: ''
+    userType: '',
+    availability: null,
   })
   const [portfolioProjects, setPortfolioProjects] = useState([])
   const [newProject, setNewProject] = useState({ name: '', description: '', url: '' })
@@ -76,29 +81,53 @@ function RegistrationForm() {
       if (!formData.titoloDiStudio) newErrors.titoloDiStudio = 'Titolo di studio è obbligatorio';
       if (!formData.competenze) newErrors.competenze = 'Competenze sono obbligatorie';
       if (!formData.occupazione) newErrors.occupazione = 'Occupazione è obbligatorio';
+      if (formData.userType === "mentor") {
+        if (
+          !formData.availability ||
+          formData.availability < 1 ||
+          formData.availability > 10
+        ) {
+          newErrors.availability = "Seleziona una disponibilità valida (1-10 ore)";
+        }}
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
   
     try {
-      const response = await registerUser(formData, portfolioProjects);
+      const response = await registerUser(
+        {
+          ...formData,
+          availability: formData.userType === "mentor" ? formData.availability : null, // Aggiunto
+        },
+        portfolioProjects
+      );
+  
       if (response.success) {
-        setFeedbackMessage("Registrazione completata con successo! Il tuo account è stato creato.");
+        setFeedbackMessage(
+          "Registrazione completata con successo. Verrai Reinderizzato alla Home page tra 3 secondi"
+        );
         setFeedbackType("success");
+
+        // Imposta il timer di 5 secondi per navigare alla homepage
+  setTimeout(() => {
+    navigate("/"); // Naviga alla homepage
+  }, 3000); // 3000 millisecondi = 3 secondi
       } else {
         throw new Error(response.error);
       }
     } catch (err) {
-      setFeedbackMessage(err.message || "Errore durante la registrazione. Per favore riprova.");
+      setFeedbackMessage(
+        err.message || "Errore durante la registrazione. Per favore riprova."
+      );
       setFeedbackType("error");
     }
   };
-  
   
 
   return (
@@ -302,21 +331,74 @@ function RegistrationForm() {
                     />
                     {errors.competenze && <p id="competenze-error" className="text-red-500 text-sm">{errors.competenze}</p>}
                   </div>
-
+                  <Label htmlFor="occupazione">Occupazione</Label>
+  <Select
+    value={formData.occupazione}
+    onValueChange={(value) => setFormData(prev => ({ ...prev, occupazione: value }))}
+  >
+    <SelectTrigger id="occupazione">
+      <SelectValue placeholder="Seleziona la tua occupazione" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="developer">Sviluppatore</SelectItem>
+      <SelectItem value="web-developer">Sviluppatore Web</SelectItem>
+      <SelectItem value="mobile-developer">Sviluppatore Mobile</SelectItem>
+      <SelectItem value="data-scientist">Data Scientist</SelectItem>
+      <SelectItem value="ml-engineer">Machine Learning Engineer</SelectItem>
+      <SelectItem value="ai-specialist">Specialista AI</SelectItem>
+      <SelectItem value="cybersecurity-expert">Esperto Cybersecurity</SelectItem>
+      <SelectItem value="cloud-architect">Cloud Architect</SelectItem>
+      <SelectItem value="network-engineer">Network Engineer</SelectItem>
+      <SelectItem value="devops-engineer">DevOps Engineer</SelectItem>
+      <SelectItem value="blockchain-developer">Blockchain Developer</SelectItem>
+      <SelectItem value="game-developer">Game Developer</SelectItem>
+      <SelectItem value="it-support-specialist">Specialista Supporto IT</SelectItem>
+      <SelectItem value="ui-ux-designer">UI/UX Designer</SelectItem>
+      <SelectItem value="qa-engineer">Quality Assurance Engineer</SelectItem>
+      <SelectItem value="database-admin">Database Administrator</SelectItem>
+      <SelectItem value="robotics-engineer">Robotics Engineer</SelectItem>
+      <SelectItem value="iot-developer">IoT Developer</SelectItem>
+      <SelectItem value="digital-transformation-lead">Lead Trasformazione Digitale</SelectItem>
+      <SelectItem value="big-data-analyst">Analista Big Data</SelectItem>
+    </SelectContent>
+  </Select>
+  {errors.occupazione && <p id="occupazione-error" className="text-red-500 text-sm">{errors.occupazione}</p>}
                   <div className="space-y-2">
-                    <Label htmlFor="occupazione">Occupazione</Label>
-                    <Input
-                      id="occupazione"
-                      name="occupazione"
-                      value={formData.occupazione}
-                      onChange={handleInputChange}
-                      placeholder="Inserisci la tua occupazione"
-                      className="focus:ring-[#178563] focus:border-[#178563]"
-                      aria-invalid={errors.occupazione ? "true" : "false"}
-                      aria-describedby={errors.occupazione ? "occupazione-error" : undefined}
-                    />
-                    {errors.occupazione && <p id="occupazione-error" className="text-red-500 text-sm">{errors.occupazione}</p>}
+
                   </div>
+
+
+
+{userType === "mentor" && (
+  <div className="space-y-2">
+    <Label>Disponibilità (ore settimanali)</Label>
+    <div className="mt-2 flex space-x-2">
+      {[...Array(10)].map((_, i) => (
+ <Button
+ key={i}
+ type="button" // Aggiunto per impedire il comportamento di submit
+ variant={formData.availability === i + 1 ? "default" : "outline"}
+ className={`h-8 w-8 p-0 ${
+   formData.availability === i + 1 ? "bg-emerald-600" : ""
+ }`}
+ onClick={() =>
+   setFormData((prev) => ({ ...prev, availability: i + 1 }))
+ }
+>
+ {i + 1}
+</Button>
+
+      ))}
+    </div>
+    {errors.availability && (
+      <p className="text-red-500 text-sm">{errors.availability}</p>
+    )}
+  </div>
+)}
+
+
+
+
                   <div className="space-y-2">
                     <Label htmlFor="userType">Tipo di Utente</Label>
                     <RadioGroup

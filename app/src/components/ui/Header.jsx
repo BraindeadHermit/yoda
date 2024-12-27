@@ -21,16 +21,15 @@ export default function Header() {
     setIsMenuOpen((prev) => !prev);
   };
 
-const handleLogout = async () => {
-  try {
-    await signOut(auth);
-    setUser(null);
-    navigate('/login', { state: { message: 'Logout effettuato con successo' } }); // Passa il messaggio
-  } catch (error) {
-    console.error('Errore durante il logout:', error);
-  }
-};
-
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      navigate('/login', { state: { message: 'Logout effettuato con successo' } }); // Passa il messaggio
+    } catch (error) {
+      console.error('Errore durante il logout:', error);
+    }
+  };
 
   return (
     <header className="bg-white border-b border-green-200 px-6 py-3">
@@ -44,6 +43,28 @@ const handleLogout = async () => {
             Piattaforma di Mentorship
           </span>
         </div>
+
+        {/* Menu di navigazione */}
+        <nav className="flex space-x-8">
+          <Link
+            to="/contents"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            CONTENUTI
+          </Link>
+          <Link
+            to="/videos"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            VIDEO
+          </Link>
+          <Link
+            to="/personal-area"
+            className="text-sm text-green-700 hover:text-green-500 font-semibold tracking-wide uppercase"
+          >
+            AREA PERSONALE
+          </Link>
+        </nav>
 
         {/* Barra di ricerca */}
         <div className="flex-1 max-w-xl mx-8">
