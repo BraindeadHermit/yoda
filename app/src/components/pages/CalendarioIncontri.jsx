@@ -5,6 +5,7 @@ import Header from "@/components/ui/header";
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { fetchMeetingsForMentor, filterDaysWithMeetings, updateMeeting, deleteMeeting } from "@/dao/meetingsDAO"
+import { useParams } from 'react-router-dom';
 
 const CalendarioIncontri = () => {
   const [user, setUser] = useState(null);
@@ -13,8 +14,9 @@ const CalendarioIncontri = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [editingMeeting, setEditingMeeting] = useState(null);
-
+  const { meetingId } = useParams();
   const auth = getAuth();
+  // Per recuperare i parametri della query
 
   const fetchMeetings = async () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -36,7 +38,6 @@ const CalendarioIncontri = () => {
 
     return () => unsubscribe();
   };
-
   const handleEdit = (meeting) => {
     setEditingMeeting(meeting);
   };
@@ -54,7 +55,6 @@ const CalendarioIncontri = () => {
       console.error("Errore:", error);
     }
   };
-
   const handleDelete = async (meetingId) => {
     console.log("Tentativo di eliminazione incontro con ID:", meetingId);
     try {
@@ -266,25 +266,45 @@ const CalendarioIncontri = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <Button
-                  onClick={() => handleEdit(meeting)}
-                  style={{
-                    backgroundColor: '#10B981',
-                    color: 'white',
-                    marginRight: '8px',
-                  }}
-                >
-                  Modifica
-                </Button>
-                <Button
-                  onClick={() => handleDelete(meeting.id)}
-                  style={{
-                    backgroundColor: '#EF4444',
-                    color: 'white',
-                  }}
-                >
-                  Elimina
-                </Button>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <Button
+                    onClick={() => handleEdit(meeting)}
+                    style={{
+                      backgroundColor: '#10B981',
+                      color: 'white',
+                      width: '120px',  // Imposta una larghezza fissa per i bottoni
+                    }}
+                  >
+                    Modifica
+                  </Button>
+                  <Button
+                    onClick={() => handleDelete(meeting.id)}
+                    style={{
+                      backgroundColor: '#EF4444',
+                      color: 'white',
+                      width: '120px',  // Imposta una larghezza fissa per i bottoni
+                    }}
+                  >
+                    Elimina
+                  </Button>
+                  <Link to={`/MeetingSummary/${meeting.id}`}>
+                    <Button
+                      variant="solid"
+                      color="green"
+                      className="flex items-center gap-2 w-full justify-center p-4"
+                      style={{
+                        backgroundColor: '#10B981',
+                        color: 'white',
+                        width: '120px',  // Imposta una larghezza fissa per i bottoni
+                      }}
+                    >
+                      <span className="text-white text-lg font-medium" style={{ fontSize: '16px' }}>
+                        Post-Meeting
+                      </span>
+                    </Button>
+                  </Link>
+
+                </div>
               </div>
             ))}
           </div>
@@ -423,6 +443,7 @@ const CalendarioIncontri = () => {
               </div>
             </form>
           </div>
+
         </div>
       )}
     </div>

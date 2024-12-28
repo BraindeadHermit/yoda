@@ -12,7 +12,7 @@ import MentorProfileForm from './components/pages/ModifyProfile';
 import DettagliUtenteWrapper from './components/pages/DettaglioUtente';
 import MeetingScheduler from './components/pages/MeetingScheduler';
 import CalendarioIncontri from './components/pages/CalendarioIncontri';
-
+import MeetingSummary from './components/pages/meeting-summary';
 
 function App() {
   const db = app;
@@ -32,6 +32,7 @@ function App() {
         <Route path="/dettagli/:userId" element={<DettagliUtenteWrapper/>} />
         <Route path = "/MeetingScheduler" element={<MeetingScheduler/>}/>
         <Route path = "/Calendar" element={<CalendarioIncontri/>}/>
+        <Route path = "/MeetingSummary/:meetingid" element={<MeetingSummary/>}/>
       </Routes>
     </BrowserRouter>
   );
