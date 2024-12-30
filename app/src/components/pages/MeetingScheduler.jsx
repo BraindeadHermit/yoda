@@ -91,10 +91,11 @@ const MeetingScheduler = () => {
           time: formData.time,
           topic: formData.topic,
           description: formData.description,
-          mentorId: user.uid,
-          menteeId: selectedParticipant.id,
-          menteeName: selectedParticipant.nome, // Modifica qui: usa 'nome' invece di 'name'
+          mentorId: user.uid,  // Assicurati che `user.uid` sia definito
+          menteeId: selectedParticipant.id, // Questo dovrebbe essere l'ID del mentee
+          menteeName: selectedParticipant.nome, // Usa 'nome' invece di 'name'
           menteeEmail: selectedParticipant.email,
+          userType: "mentee", // Puoi decidere dinamicamente se è mentee o mentor
         };
 
         await createMeeting(newMeeting);

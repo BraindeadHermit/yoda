@@ -96,11 +96,6 @@ const CalendarioIncontri = () => {
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
-
-  if (!meetings.length) {
-    return <div>Non hai incontri programmati.</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
       <Header />

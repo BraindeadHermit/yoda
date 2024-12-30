@@ -13,7 +13,8 @@ import DettagliUtenteWrapper from './components/pages/DettaglioUtente';
 import MeetingScheduler from './components/pages/MeetingScheduler';
 import CalendarioIncontri from './components/pages/CalendarioIncontri';
 import MeetingSummary from './components/pages/meeting-summary';
-
+import Menteestatistics from './components/pages/mentee-statistics';
+import CalendarioIncontriMentee from './components/pages/CalendarioIncontriMentee';
 function App() {
   const db = app;
   console.log(db);
@@ -33,6 +34,8 @@ function App() {
         <Route path = "/MeetingScheduler" element={<MeetingScheduler/>}/>
         <Route path = "/Calendar" element={<CalendarioIncontri/>}/>
         <Route path = "/MeetingSummary/:meetingid" element={<MeetingSummary/>}/>
+        <Route path = "/Menteestatistics" element={<Menteestatistics/>}/>
+        <Route path = "/CalendarMentee" element={<CalendarioIncontriMentee/>}/>
       </Routes>
     </BrowserRouter>
   );

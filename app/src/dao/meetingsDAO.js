@@ -1,5 +1,5 @@
 import { db } from "@/firebase/firebase";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc , getDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc, addDoc , getDoc , increment} from 'firebase/firestore';
 
 /**
  * Recupera tutti gli incontri di un mentor dal database.
@@ -21,6 +21,34 @@ export const fetchMeetingsForMentor = async (mentorId) => {
       return {
         id: doc.id,
         menteeName: data.menteeName,
+        date: data.date.toDate(),
+        time: data.time,
+        description: data.description,
+        topic: data.topic,
+      };
+    });
+  } catch (error) {
+    console.error("Errore durante il recupero degli incontri:", error);
+    throw new Error("Impossibile recuperare gli incontri.");
+  }
+};
+
+export const fetchMeetingsForMentee = async (menteeId) => {
+  const db = getFirestore();
+
+  try {
+    const meetingsQuery = query(
+      collection(db, 'meetings'),
+      where('menteeId', '==', menteeId)
+    );
+
+    const querySnapshot = await getDocs(meetingsQuery);
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        menteeName: data.menteeName,
+        mentorName: data.mentorName,
         date: data.date.toDate(),
         time: data.time,
         description: data.description,
@@ -94,9 +122,34 @@ export const updateMeetingMinutes = async (meetingId, minuta) => {
  * @param {Object} meetingData - Dati dell'incontro.
  * @returns {Promise<string>} - ID del nuovo incontro creato.
  */
+
 export const createMeeting = async (meetingData) => {
   try {
-    // Aggiungiamo il campo 'MINUTA' con valore null
+    // Verifica che userType sia mentee
+    if (meetingData.userType !== 'mentee') {
+      throw new Error('Il tipo di utente deve essere mentee');
+    }
+
+    // Recupera il riferimento al documento del mentee nella collezione utenti
+    const menteeRef = doc(db, 'utenti', meetingData.menteeId);
+    const menteeSnap = await getDoc(menteeRef);
+
+    if (!menteeSnap.exists()) {
+      throw new Error(`Mentee con ID ${meetingData.menteeId} non trovato`);
+    }
+
+    const menteeData = menteeSnap.data();
+
+    // Se il campo meetingsCount esiste, incrementalo, altrimenti crealo e impostalo a 1
+    if (typeof menteeData.meetingsCount === 'number') {
+      // Incrementa meetingsCount
+      await updateDoc(menteeRef, { meetingsCount: increment(1) });
+    } else {
+      // Crea meetingsCount e imposta a 1
+      await updateDoc(menteeRef, { meetingsCount: 1 });
+    }
+
+    // Crea il nuovo meeting
     const newMeeting = {
       mentorId: meetingData.mentorId,
       menteeId: meetingData.menteeId,
