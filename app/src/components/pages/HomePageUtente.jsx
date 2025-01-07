@@ -85,6 +85,14 @@ export default function HomePageUtente() {
                 >
                   Trova un Mentore
                 </Button>
+                <Button
+      className="bg-white text-[#178563] hover:bg-[#0f5e45] hover:text-white shadow-lg transform transition-all duration-200 ease-in-out hover:scale-105 px-10 py-4 text-xl font-medium mt-4"
+      onClick={() => navigate("/mentorsearch")}
+    >
+      Ricerca il mentore manualmente
+    </Button>
+
+
               </section>
             )}
 

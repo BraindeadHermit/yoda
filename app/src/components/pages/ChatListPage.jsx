@@ -176,7 +176,7 @@ export default function ChatListPage() {
               </p>
               <button
                 className="px-8 py-3 bg-[#22A699] text-white font-semibold rounded-lg shadow-md hover:bg-[#178563] transition"
-                onClick={() => navigate("/new-chat")}
+                onClick={() => navigate("/personal-area")}
               >
                 Inizia una nuova conversazione
               </button>
