@@ -1,5 +1,5 @@
 import { getFirestore, setDoc, doc, getDoc, connectFirestoreEmulator } from "firebase/firestore";
-import { app } from "@/Firebase/firebase"; // Importa la configurazione Firebase
+import { app } from "@/firebase/firebase"; // Importa la configurazione Firebase
 import { getStorage, ref, uploadBytes, getDownloadURL,  connectStorageEmulator} from "firebase/storage";
 
 // Ottieni Firestore
@@ -355,7 +355,7 @@ async function populateDatabase() {
                 data: {
                     email: "author1@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents1.pdf",
+                    filePath: "Documents1.pdf",
                     icon: "📄",
                     role: "Researcher",
                     title: "AI and Ethics",
@@ -367,7 +367,7 @@ async function populateDatabase() {
                 data: {
                     email: "author2@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents2.pdf",
+                    filePath: "Documents2.pdf",
                     icon: "📄",
                     role: "Engineer",
                     title: "Cloud Architecture",
@@ -379,7 +379,7 @@ async function populateDatabase() {
                 data: {
                     email: "author3@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents3.pdf",
+                    filePath: "Documents3.pdf",
                     icon: "📄",
                     role: "Scientist",
                     title: "Blockchain for Future",
@@ -391,7 +391,7 @@ async function populateDatabase() {
                 data: {
                     email: "author4@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents4.pdf",
+                    filePath: "Documents4.pdf",
                     icon: "📄",
                     role: "Developer",
                     title: "Web Development Practices",
@@ -403,7 +403,7 @@ async function populateDatabase() {
                 data: {
                     email: "author5@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents5.pdf",
+                    filePath: "Documents5.pdf",
                     icon: "📄",
                     role: "Technologist",
                     title: "Understanding AI",
@@ -415,7 +415,7 @@ async function populateDatabase() {
                 data: {
                     email: "author6@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents6.pdf",
+                    filePath: "Documents6.pdf",
                     icon: "📄",
                     role: "Software Engineer",
                     title: "Building Scalable Web Apps",
@@ -427,7 +427,7 @@ async function populateDatabase() {
                 data: {
                     email: "author7@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents7.pdf",
+                    filePath: "Documents7.pdf",
                     icon: "📄",
                     role: "Data Scientist",
                     title: "Predictive Modeling with Python",
@@ -439,7 +439,7 @@ async function populateDatabase() {
                 data: {
                     email: "author8@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents8.pdf",
+                    filePath: "Documents8.pdf",
                     icon: "📄",
                     role: "Cloud Architect",
                     title: "Designing Cloud Systems",
@@ -451,7 +451,7 @@ async function populateDatabase() {
                 data: {
                     email: "author9@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents9.pdf",
+                    filePath: "Documents9.pdf",
                     icon: "📄",
                     role: "Blockchain Developer",
                     title: "Blockchain Development",
@@ -463,7 +463,7 @@ async function populateDatabase() {
                 data: {
                     email: "author10@gmail.com",
                     createdAt: new Date(),
-                    filePath: "../Documents/Documents10.pdf",
+                    filePath: "Documents10.pdf",
                     icon: "📄",
                     role: "AI Specialist",
                     title: "Ethics in Artificial Intelligence",
