@@ -46,20 +46,12 @@ const MentorshipPage = () => {
         navigate(route);
     };
     const handleMessageClick = (session) => {
-        console.log("📩 handleMessageClick chiamato con session:", session);
     
         const chatId = session.chatId || null;
         const menteeId = session.menteeId;
         const mentoreId = session.mentoreId;
         const menteeNome = session.menteeNome;
         const mentoreNome = session.mentoreNome;
-    
-        console.log("📌 Dati che verranno passati a navigate:");
-        console.log("  🔹 chatId:", chatId);
-        console.log("  🔹 menteeId:", menteeId);
-        console.log("  🔹 mentoreId:", mentoreId);
-        console.log("  🔹 menteeNome:", menteeNome);
-        console.log("  🔹 mentoreNome:", mentoreNome);
     
         navigate("/chat-support", {
             state: {
@@ -70,8 +62,6 @@ const MentorshipPage = () => {
                 mentoreNome
             },
         });
-    
-        console.log("✅ Navigazione avviata verso /chat-support");
     };
     
     const handleCloseSession = async (sessionId) => {
@@ -83,7 +73,7 @@ const MentorshipPage = () => {
                 )
             );
         } catch (error) {
-            console.error("Errore nella chiusura della sessione:", error);
+            alert("Errore nella chiusura della sessione:" + error);
         }
     };
 

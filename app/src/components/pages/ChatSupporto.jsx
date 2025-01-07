@@ -23,15 +23,8 @@ export default function ChatSupporto() {
   const [user, setUser] = useState({ nome: "", cognome: "", occupazione: "" });
   const { chatId, menteeId, mentoreId, menteeNome, mentoreNome, problemType } = location.state || {};
 
-  console.log("🔎 Dati ricevuti:");
-  console.log("📌 chatId:", chatId);
-  console.log("📌 menteeId:", menteeId);
-  console.log("📌 mentoreId:", mentoreId);
-  console.log("📌 menteeNome:", menteeNome);
-  console.log("📌 mentoreNome:", mentoreNome);
-
   if (!userId) {
-    console.error("Utente non autenticato.");
+    alert("Utente non autenticato.");
     navigate("/login");
     return null;
   }
