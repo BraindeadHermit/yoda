@@ -46,13 +46,13 @@ const MentorshipPage = () => {
         navigate(route);
     };
     const handleMessageClick = (session) => {
-    
+
         const chatId = session.chatId || null;
         const menteeId = session.menteeId;
         const mentoreId = session.mentoreId;
         const menteeNome = session.menteeNome;
         const mentoreNome = session.mentoreNome;
-    
+
         navigate("/chat-support", {
             state: {
                 chatId,
@@ -63,7 +63,7 @@ const MentorshipPage = () => {
             },
         });
     };
-    
+
     const handleCloseSession = async (sessionId) => {
         try {
             await closeMentorshipSession(sessionId);
@@ -185,6 +185,26 @@ const MentorshipPage = () => {
                     ) : (
                         <p className="text-white">Nessuna sessione di mentorship trovata.</p>
                     )}
+                    <button
+                        onClick={() => navigate("/chat-list")}
+                        className="fixed bottom-8 right-8 z-50 flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold rounded-full shadow-lg transition duration-300"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="w-6 h-6 mr-2"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M8 10h.01M12 10h.01M16 10h.01M21 16.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5M21 12.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5m16 0c0 2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5m16 0c0-2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5"
+                            />
+                        </svg>
+                        Chat Mentorship
+                    </button>
                 </div>
             </div>
         </div>
