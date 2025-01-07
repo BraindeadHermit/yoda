@@ -52,59 +52,31 @@ const CalendarioIncontri = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
 
-      <div style={{
-        background: 'linear-gradient(180deg, #10B981 0%, #ffffff 100%)',
-        padding: '20px 0',
-      }}>
-        <div style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          padding: '20px',
-        }}>
-          <h1 style={{
-            fontSize: '24px',
-            color: 'black',
-            marginBottom: '20px'
-          }}>
-            Calendario Incontri
-          </h1>
+      <div className="py-10">
+        <div className="max-w-4xl mx-auto px-6">
+          <h1 className="text-4xl font-bold text-white mb-8 tracking-tight">Calendario Incontri</h1>
 
           {/* Calendar Card */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '20px'
-          }}>
+          <div className="bg-white shadow-lg rounded-lg p-8 mb-10">
             {/* Calendar Header */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px'
-            }}>
+            <div className="flex justify-between items-center mb-6">
               <button
-                style={{
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  fontSize: '18px'
-                }}
+                className="text-2xl text-gray-700 hover:text-gray-900"
                 onClick={() => changeMonth('prev')}
               >
                 ←
               </button>
-              <span>{new Date(currentYear, currentMonth).toLocaleString('it-IT', { month: 'long', year: 'numeric' })}</span>
+              <span className="font-medium text-xl text-gray-800">
+                {new Date(currentYear, currentMonth).toLocaleString('it-IT', {
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </span>
               <button
-                style={{
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  fontSize: '18px'
-                }}
+                className="text-2xl text-gray-700 hover:text-gray-900"
                 onClick={() => changeMonth('next')}
               >
                 →
@@ -112,23 +84,13 @@ const CalendarioIncontri = () => {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '8px'
-            }}>
-              {/* Days of week */}
-              {['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'].map(day => (
-                <div key={day} style={{
-                  textAlign: 'center',
-                  padding: '8px',
-                  fontSize: '14px'
-                }}>
+            <div className="grid grid-cols-7 gap-3 text-center">
+              {['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'].map((day) => (
+                <div key={day} className="text-sm font-semibold text-gray-600 uppercase">
                   {day}
                 </div>
               ))}
 
-              {/* Calendar days */}
               {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }, (_, i) => {
                 const day = i + 1;
                 const hasMeeting = daysWithMeetings.includes(day);
@@ -136,106 +98,47 @@ const CalendarioIncontri = () => {
                 return (
                   <div
                     key={day}
-                    style={{
-                      padding: '8px',
-                      textAlign: 'center',
-                      backgroundColor: hasMeeting ? '#10B981' : 'transparent',
-                      color: hasMeeting ? 'white' : 'black',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      position: 'relative'
-                    }}
+                    className={`py-4 text-sm rounded-lg font-medium ${
+                      hasMeeting
+                        ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
+                        : 'bg-gray-100 text-gray-800'
+                    } hover:shadow-md cursor-pointer transition`}
                   >
                     {day}
-                    {hasMeeting && (
-                      <div style={{
-                        position: 'absolute',
-                        bottom: '2px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '4px',
-                        height: '4px',
-                        backgroundColor: '#10B981',
-                        borderRadius: '50%'
-                      }}></div>
-                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-         {/* Upcoming Meetings Section */}
-<h2 style={{
-  fontSize: '20px',
-  color: 'black',
-  marginBottom: '16px'
-}}>
-  Prossimi Incontri
-</h2>
-
-<div style={{
-  backgroundColor: 'white',
-  borderRadius: '8px',
-  padding: '16px'
-}}>
-  {meetings.map(meeting => (
-    <div
-      key={meeting.id}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between', // Aggiungi per mettere il bottone a destra
-        padding: '12px',
-        borderBottom: '1px solid #eee'
-      }}
-    >
-      {/* Calendar Icon */}
-      <div style={{
-        width: '24px',
-        height: '24px',
-        backgroundColor: '#E6F7F2',
-        borderRadius: '4px',
-        marginRight: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        📅
-      </div>
-
-      {/* Meeting Details */}
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: '500' }}>
-          Incontro con {meeting.mentorName}
-        </div>
-        <div style={{
-          fontSize: '14px',
-          color: '#666'
-        }}>
-          {meeting.date.toLocaleDateString()}, {meeting.time}
-        </div>
-      </div>
-
-      {/* Post-Meeting Button */}
-      <Link to={`/MeetingSummaryMentee/${meeting.id}`}>
-        <Button
-          variant="solid"
-          color="green"
-          className="flex items-center gap-2 justify-center p-4"
-          style={{
-            backgroundColor: '#10B981',
-            color: 'white',
-            width: '120px',  // Imposta una larghezza fissa per il bottone
-          }}
-        >
-          <span className="text-white text-lg font-medium" style={{ fontSize: '14px' }}>
-            Visualizza Minuta
-          </span>
-        </Button>
-      </Link>
-    </div>
-  ))}
+          {/* Upcoming Meetings Section */}
+          <h2 className="text-2xl font-semibold text-white mb-6">Prossimi Incontri</h2>
+          <div className="bg-white shadow-lg rounded-lg p-6">
+            {meetings.map((meeting) => (
+              <div
+                key={meeting.id}
+                className="flex items-center justify-between p-4 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-lg">
+                    📅
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Incontro con {meeting.mentorName}</div>
+                    <div className="text-sm text-gray-500">
+                      {meeting.date.toLocaleDateString()}, {meeting.time}
+                    </div>
+                  </div>
+                </div>
+                <Link to={`/MeetingSummaryMentee/${meeting.id}`}>
+                  <Button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+                  >
+                    Visualizza Minuta
+                  </Button>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>

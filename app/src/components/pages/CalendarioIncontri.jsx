@@ -77,59 +77,31 @@ const CalendarioIncontri = () => {
     return new Date(year, month + 1, 0).getDate();
   };
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
 
-      <div style={{
-        background: 'linear-gradient(180deg, #10B981 0%, #ffffff 100%)',
-        padding: '20px 0',
-      }}>
-        <div style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          padding: '20px',
-        }}>
-          <h1 style={{
-            fontSize: '24px',
-            color: 'black',
-            marginBottom: '20px'
-          }}>
-            Calendario Incontri
-          </h1>
+      <div className="py-10">
+        <div className="max-w-4xl mx-auto px-6">
+          <h1 className="text-4xl font-bold text-white mb-8 tracking-tight">Calendario Incontri</h1>
 
           {/* Calendar Card */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '20px'
-          }}>
+          <div className="bg-white shadow-lg rounded-lg p-8 mb-10">
             {/* Calendar Header */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px'
-            }}>
+            <div className="flex justify-between items-center mb-6">
               <button
-                style={{
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  fontSize: '18px'
-                }}
+                className="text-2xl text-gray-700 hover:text-gray-900"
                 onClick={() => changeMonth('prev')}
               >
                 ←
               </button>
-              <span>{new Date(currentYear, currentMonth).toLocaleString('it-IT', { month: 'long', year: 'numeric' })}</span>
+              <span className="font-medium text-xl text-gray-800">
+                {new Date(currentYear, currentMonth).toLocaleString('it-IT', {
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </span>
               <button
-                style={{
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  fontSize: '18px'
-                }}
+                className="text-2xl text-gray-700 hover:text-gray-900"
                 onClick={() => changeMonth('next')}
               >
                 →
@@ -137,23 +109,13 @@ const CalendarioIncontri = () => {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '8px'
-            }}>
-              {/* Days of week */}
-              {['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'].map(day => (
-                <div key={day} style={{
-                  textAlign: 'center',
-                  padding: '8px',
-                  fontSize: '14px'
-                }}>
+            <div className="grid grid-cols-7 gap-3 text-center">
+              {['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'].map((day) => (
+                <div key={day} className="text-sm font-semibold text-gray-600 uppercase">
                   {day}
                 </div>
               ))}
 
-              {/* Calendar days */}
               {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }, (_, i) => {
                 const day = i + 1;
                 const hasMeeting = daysWithMeetings.includes(day);
@@ -161,124 +123,58 @@ const CalendarioIncontri = () => {
                 return (
                   <div
                     key={day}
-                    style={{
-                      padding: '8px',
-                      textAlign: 'center',
-                      backgroundColor: hasMeeting ? '#10B981' : 'transparent',
-                      color: hasMeeting ? 'white' : 'black',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      position: 'relative'
-                    }}
+                    className={`py-4 text-sm rounded-lg font-medium ${
+                      hasMeeting
+                        ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
+                        : 'bg-gray-100 text-gray-800'
+                    } hover:shadow-md cursor-pointer transition`}
                   >
                     {day}
-                    {hasMeeting && (
-                      <div style={{
-                        position: 'absolute',
-                        bottom: '2px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '4px',
-                        height: '4px',
-                        backgroundColor: '#10B981',
-                        borderRadius: '50%'
-                      }}></div>
-                    )}
                   </div>
                 );
               })}
             </div>
           </div>
-          {/* Upcoming Meetings Section */}
-          <h2 style={{
-            fontSize: '20px',
-            color: 'black',
-            marginBottom: '16px'
-          }}>
-            Prossimi Incontri
-          </h2>
 
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '16px'
-          }}>
-            {meetings.map(meeting => (
+          {/* Upcoming Meetings Section */}
+          <h2 className="text-2xl font-semibold text-white mb-6">Prossimi Incontri</h2>
+          <div className="bg-white shadow-lg rounded-lg p-6">
+            {meetings.map((meeting) => (
               <div
                 key={meeting.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '12px',
-                  borderBottom: '1px solid #eee'
-                }}
+                className="flex items-center justify-between p-4 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition"
               >
-                {/* Calendar Icon */}
-                <div style={{
-                  width: '24px',
-                  height: '24px',
-                  backgroundColor: '#E6F7F2',
-                  borderRadius: '4px',
-                  marginRight: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  📅
-                </div>
-
-                {/* Meeting Details */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '500' }}>
-                    Incontro con {meeting.menteeName}
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-lg">
+                    📅
                   </div>
-                  <div style={{
-                    fontSize: '14px',
-                    color: '#666'
-                  }}>
-                    {meeting.date.toLocaleDateString()}, {meeting.time}
+                  <div>
+                    <div className="font-medium text-gray-900">Incontro con {meeting.menteeName}</div>
+                    <div className="text-sm text-gray-500">
+                      {meeting.date.toLocaleDateString()}, {meeting.time}
+                    </div>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <div className="flex space-x-3">
                   <Button
                     onClick={() => handleEdit(meeting)}
-                    style={{
-                      backgroundColor: '#10B981',
-                      color: 'white',
-                      width: '120px',  // Imposta una larghezza fissa per i bottoni
-                    }}
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
                   >
                     Modifica
                   </Button>
                   <Button
-                    onClick={() => handleDelete(meeting.id,meeting.menteeId)}
-                    style={{
-                      backgroundColor: '#EF4444',
-                      color: 'white',
-                      width: '120px',  // Imposta una larghezza fissa per i bottoni
-                    }}
+                    onClick={() => handleDelete(meeting.id, meeting.menteeId)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
                   >
                     Elimina
                   </Button>
                   <Link to={`/MeetingSummary/${meeting.id}`}>
                     <Button
-                      variant="solid"
-                      color="green"
-                      className="flex items-center gap-2 w-full justify-center p-4"
-                      style={{
-                        backgroundColor: '#10B981',
-                        color: 'white',
-                        width: '120px',  // Imposta una larghezza fissa per i bottoni
-                      }}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                     >
-                      <span className="text-white text-lg font-medium" style={{ fontSize: '16px' }}>
-                        Post-Meeting
-                      </span>
+                      Post-Meeting
                     </Button>
                   </Link>
-
                 </div>
               </div>
             ))}
@@ -287,16 +183,9 @@ const CalendarioIncontri = () => {
           {/* Add Meeting Button */}
           <Link to="/MeetingScheduler">
             <Button
-              variant="solid"
-              color="green"
-              className="flex items-center gap-2 w-full justify-center p-4 mt-6"
-              style={{
-                backgroundColor: '#10B981',
-                color: 'white',
-              }}
+              className="w-full mt-8 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition text-lg font-semibold"
             >
-              <span className="text-white text-lg font-medium">+</span>
-              <span className="text-white text-lg font-medium">Aggiungi incontro</span>
+              + Aggiungi Incontro
             </Button>
           </Link>
         </div>
@@ -304,28 +193,9 @@ const CalendarioIncontri = () => {
 
       {/* Edit Meeting Form */}
       {editingMeeting && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '400px',
-            }}
-          >
-            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Modifica Incontro</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Modifica Incontro</h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -340,85 +210,70 @@ const CalendarioIncontri = () => {
                 handleSaveEdit(updatedMeeting);
               }}
             >
-              <div style={{ marginBottom: '8px' }}>
-                <label>Nome Mentee</label>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Nome Mentee</label>
                 <input
                   name="menteeName"
                   defaultValue={editingMeeting.menteeName}
                   disabled
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  className="w-full border rounded-md p-2 mt-1"
                   required
                 />
               </div>
-              <div style={{ marginBottom: '8px' }}>
-                <label>Data</label>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Data</label>
                 <input
                   name="date"
                   type="date"
                   defaultValue={editingMeeting.date.toISOString().substr(0, 10)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  className="w-full border rounded-md p-2 mt-1"
                   required
                 />
               </div>
-              <div style={{ marginBottom: '8px' }}>
-                <label>Ora</label>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Ora</label>
                 <input
                   name="time"
                   type="time"
                   defaultValue={editingMeeting.time}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  className="w-full border rounded-md p-2 mt-1"
                   required
                 />
               </div>
-              <div style={{ marginBottom: '8px' }}>
-                <label>Descrizione</label>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Descrizione</label>
                 <textarea
                   name="description"
                   defaultValue={editingMeeting.description}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  className="w-full border rounded-md p-2 mt-1"
                   required
                 />
               </div>
-              <div style={{ marginBottom: '16px' }}>
-                <label>Argomento</label>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700">Argomento</label>
                 <input
                   name="topic"
                   defaultValue={editingMeeting.topic}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  className="w-full border rounded-md p-2 mt-1"
                   required
                 />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className="flex justify-between">
                 <Button
                   type="submit"
-                  style={{
-                    backgroundColor: '#10B981',
-                    color: 'white',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
                 >
                   Salva
                 </Button>
                 <Button
                   onClick={() => setEditingMeeting(null)}
-                  style={{
-                    backgroundColor: '#EF4444',
-                    color: 'white',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
                 >
                   Annulla
                 </Button>
               </div>
             </form>
           </div>
-
         </div>
       )}
     </div>

@@ -92,7 +92,7 @@ export default function HomePageUtente() {
               <section className="text-center mb-12 mt-24">
                 <Button
                   className="bg-white text-[#178563] hover:bg-[#0f5e45] hover:text-white shadow-lg transform transition-all duration-200 ease-in-out hover:scale-110 px-16 py-8 text-4xl font-bold"
-                  onClick={() => navigate("/mentorships")}
+                  onClick={() => navigate("/personal-area")}
                 >
                   Le tue Mentorship
                 </Button>

@@ -39,14 +39,14 @@ function MeetingSummaryMentee() {
   const { menteeName, mentorName, date, time, topic, description, minuta } = meeting;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
 
       <div className="max-w-3xl mx-auto mt-12 bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="bg-emerald-600 text-white p-6">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-              {menteeName.slice(0, 1)} {/* Iniziale del mentee */}
+            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
+              {menteeName.slice(0, 1)}
             </div>
             <div>
               <h2 className="text-xl font-semibold">Post-Meeting: {menteeName}</h2>
@@ -59,9 +59,9 @@ function MeetingSummaryMentee() {
       </div>
 
       <div className="max-w-3xl mx-auto p-6 space-y-6 mt-8 bg-white rounded-lg shadow-lg">
-        <div className="mt-6 space-y-6">
+        <div className="space-y-6">
           {/* Meeting Summary */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-gray-50 rounded-lg shadow">
             <div className="p-6">
               <h3 className="text-lg font-medium">Riepilogo dell'Incontro</h3>
               <p className="mt-4 text-gray-600">{description}</p>
@@ -69,35 +69,33 @@ function MeetingSummaryMentee() {
           </div>
 
           {/* Meeting Details */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-gray-50 rounded-lg shadow">
             <div className="p-6">
               <h3 className="text-lg font-medium">Dettagli dell'Incontro</h3>
-              <p><strong>Mentore:</strong> {mentorName}</p>
-              <p><strong>Orario:</strong> {time}</p>
-              <p><strong>Argomento:</strong> {topic}</p>
+              <p className="mt-2 text-gray-600"><strong>Mentore:</strong> {mentorName}</p>
+              <p className="mt-2 text-gray-600"><strong>Orario:</strong> {time}</p>
+              <p className="mt-2 text-gray-600"><strong>Argomento:</strong> {topic}</p>
             </div>
           </div>
 
           {/* Minuta */}
-{minuta && (
-  <div className="bg-white rounded-lg shadow">
-    <div className="p-6">
-      <h3 className="text-lg font-medium">Minuta dell'Incontro</h3>
-      {/* Itera sulla mappa `minuta` per stampare le chiavi e i valori */}
-      <div className="mt-4 text-gray-600">
-        {Object.entries(minuta).map(([key, value]) => (
-          <div key={key} className="mb-2">
-            <strong>{key}:</strong> {value}
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+          {minuta && (
+            <div className="bg-gray-50 rounded-lg shadow">
+              <div className="p-6">
+                <h3 className="text-lg font-medium">Minuta dell'Incontro</h3>
+                <div className="mt-4 text-gray-600">
+                  {Object.entries(minuta).map(([key, value]) => (
+                    <div key={key} className="mb-2">
+                      <strong>{key}:</strong> {value}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
-
+};
 export default MeetingSummaryMentee;

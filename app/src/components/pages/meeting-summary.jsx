@@ -59,13 +59,13 @@ function MeetingSummary() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
 
       <div className="max-w-3xl mx-auto mt-12 bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="bg-emerald-600 text-white p-6">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
               {meeting.menteeInitials}
             </div>
             <div>
@@ -84,13 +84,13 @@ function MeetingSummary() {
             {successMessage}
           </div>
         )}
-        <div className="mt-6 space-y-6">
+        <div className="space-y-6">
           {/* Meeting Summary */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-gray-50 rounded-lg shadow">
             <div className="p-6">
               <h3 className="text-lg font-medium">Riepilogo dell'Incontro</h3>
               <textarea
-                className="mt-4 w-full text-gray-600 border p-2 rounded-md"
+                className="mt-4 w-full text-gray-600 border border-gray-300 p-2 rounded-md focus:ring focus:ring-emerald-200"
                 value={meeting.summary || ""}
                 onChange={(e) => setMeeting({ ...meeting, summary: e.target.value })}
                 placeholder="Aggiungi un riepilogo"
@@ -99,11 +99,11 @@ function MeetingSummary() {
           </div>
 
           {/* Additional Information */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-gray-50 rounded-lg shadow">
             <div className="p-6">
               <h3 className="text-lg font-medium">Informazioni Aggiuntive</h3>
               <textarea
-                className="mt-4 w-full text-gray-600 border p-2 rounded-md"
+                className="mt-4 w-full text-gray-600 border border-gray-300 p-2 rounded-md focus:ring focus:ring-emerald-200"
                 value={meeting.additionalInfo || ""}
                 onChange={(e) => setMeeting({ ...meeting, additionalInfo: e.target.value })}
                 placeholder="Aggiungi informazioni aggiuntive"
@@ -112,11 +112,11 @@ function MeetingSummary() {
           </div>
 
           {/* Notes */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-gray-50 rounded-lg shadow">
             <div className="p-6">
               <h3 className="text-lg font-medium">Note e Feedback</h3>
               <textarea
-                className="mt-4 w-full text-gray-600 border p-2 rounded-md"
+                className="mt-4 w-full text-gray-600 border border-gray-300 p-2 rounded-md focus:ring focus:ring-emerald-200"
                 value={meeting.notes || ""}
                 onChange={(e) => setMeeting({ ...meeting, notes: e.target.value })}
                 placeholder="Aggiungi una nuova nota..."
@@ -126,7 +126,7 @@ function MeetingSummary() {
 
           <Button
             variant="primary"
-            className="mt-4 w-full bg-emerald-600 text-white hover:bg-emerald-700"
+            className="mt-4 w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition"
             onClick={handleSubmitForm}
           >
             Invia Dati
@@ -135,6 +135,6 @@ function MeetingSummary() {
       </div>
     </div>
   );
-}
+};
 
 export default MeetingSummary;

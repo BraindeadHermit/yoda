@@ -107,39 +107,89 @@ const MeetingScheduler = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
-      <div className="mt-8"></div>
-      <div style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        backgroundColor: '#ffffff',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          backgroundColor: '#10B981',
-          padding: '16px',
-          color: '#ffffff'
-        }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Programma un nuovo incontro</h1>
+
+      <div className="py-10">
+        <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="bg-green-500 p-6 text-white">
+            <h1 className="text-2xl font-bold">Programma un nuovo incontro</h1>
+          </div>
+          <form
+            className="p-6 space-y-6"
+            onSubmit={handleSubmit}
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Data</label>
+              <input
+                type="date"
+                id="date"
+                value={formData.date}
+                onChange={handleInputChange}
+                className="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-green-200"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ora</label>
+              <input
+                type="time"
+                id="time"
+                value={formData.time}
+                onChange={handleInputChange}
+                className="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-green-200"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Argomento</label>
+              <input
+                type="text"
+                id="topic"
+                value={formData.topic}
+                onChange={handleInputChange}
+                placeholder="Argomento"
+                className="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-green-200"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Partecipante</label>
+              <select
+                id="participant"
+                value={formData.participant}
+                onChange={handleInputChange}
+                className="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-green-200"
+                required
+              >
+                <option value="">Seleziona un partecipante</option>
+                {mentees.map((mentee) => (
+                  <option key={mentee.menteeId} value={mentee.menteeId}>
+                    {mentee.menteeNome} {mentee.menteeCognome}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Descrizione</label>
+              <textarea
+                id="description"
+                rows="4"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Descrizione"
+                className="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-green-200"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition"
+            >
+              Programma incontro
+            </button>
+          </form>
         </div>
-        <form style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }} onSubmit={handleSubmit}>
-          <input type="date" id="date" value={formData.date} onChange={handleInputChange} className="p-2 border rounded" />
-          <input type="time" id="time" value={formData.time} onChange={handleInputChange} className="p-2 border rounded" />
-          <input type="text" id="topic" value={formData.topic} onChange={handleInputChange} className="p-2 border rounded" placeholder="Argomento" />
-          <select id="participant" value={formData.participant} onChange={handleInputChange} className="p-2 border rounded">
-            <option value="">Seleziona un partecipante</option>
-            {mentees.map((mentee) => (
-              <option key={mentee.menteeId} value={mentee.menteeId}>
-                {mentee.menteeNome} {mentee.menteeCognome}
-              </option>
-            ))}
-          </select>
-          <textarea id="description" rows="6" value={formData.description} onChange={handleInputChange} className="p-2 border rounded" placeholder="Descrizione"></textarea>
-          <button type="submit" style={{ backgroundColor: '#10B981', color: '#ffffff', padding: '12px', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: '500', cursor: 'pointer' }}>Programma incontro</button>
-        </form>
       </div>
     </div>
   );
