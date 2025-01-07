@@ -57,21 +57,26 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#178563] to-[#ffffff] text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7] text-black">
       <Header />
-      <main className="container mx-auto px-4 py-6">
-        <h2 className="text-2xl font-bold mb-6 text-[#ffffff]">Notifiche</h2>
-        <div className="max-w-3xl">
-          {notifications.map((notification) => (
-            <NotificationCard
-              key={notification.id}
-              notification={notification}
-              onMarkAsRead={() => handleMarkAsRead(notification.id)} // Passa la funzione per segnare come letta
-              onAccettaMentorship={() => createMentorship(notification)} // Passa la funzione per accettare la mentorship
-            />
-          ))}
+      <main className="container mx-auto px-6 py-8">
+        <h2 className="text-3xl font-bold mb-8 text-white tracking-tight">Notifiche</h2>
+        <div className="max-w-4xl bg-white rounded-lg shadow-lg p-6 space-y-4">
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+                onMarkAsRead={() => handleMarkAsRead(notification.id)}
+                onAccettaMentorship={() => createMentorship(notification)}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-lg">Nessuna notifica disponibile.</p>
+          )}
         </div>
       </main>
     </div>
   );
-}
+};
+
