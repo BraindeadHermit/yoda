@@ -657,7 +657,7 @@ async function uploadDocumentsToEmulators(authors, documentsBasePath) {
                 author.data.filePath = fileUrl; // Aggiorna l'URL con quello su Firebase Storage Emulator
                 
                 // Salva l'aggiornamento su Firestore Emulator
-                const authorDocRef = doc(db, "authors", author.id); // Crea un riferimento al documento
+                const authorDocRef = doc(db, "documents", author.id); // Crea un riferimento al documento
                 await setDoc(authorDocRef, author.data); // Aggiorna i dati su Firestore Emulator
             }
         }
