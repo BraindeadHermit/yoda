@@ -1,5 +1,5 @@
 import { getFirestore, setDoc, doc, getDoc, connectFirestoreEmulator } from "firebase/firestore";
-import { app } from "@/firebase/firebase"; // Importa la configurazione Firebase
+import { app } from "@/Firebase/firebase"; // Importa la configurazione Firebase
 import { getStorage, ref, uploadBytes, getDownloadURL,  connectStorageEmulator} from "firebase/storage";
 
 // Ottieni Firestore
@@ -627,7 +627,7 @@ async function populateDatabase() {
         for (const video of videos) {
             if (!video.data.videoUrl.includes('https')){
             const localVideoPath = videosBasePath + video.data.videoUrl;
-            const storagePath = 'videos/${video.data.videoUrl}';
+            const storagePath = `videos/${video.data.videoUrl}`;
             const videoUrl = await uploadLocalFileToEmulator(storagePath, localVideoPath);
 
             if (videoUrl) {
@@ -650,7 +650,7 @@ async function uploadDocumentsToEmulators(authors, documentsBasePath) {
 
         for (const author of authors) {
             const localDocPath = documentsBasePath + author.data.filePath;
-            const storagePath = 'documents/${author.data.filePath}';
+            const storagePath = `documents/${author.data.filePath}`;
             const fileUrl = await uploadLocalFileToEmulator(storagePath, localDocPath);
 
             if (fileUrl) {
