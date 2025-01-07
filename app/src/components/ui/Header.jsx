@@ -36,6 +36,12 @@ export default function Header() {
     }
   };
 
+
+  const goToNotifications = () => {
+      navigate('/notifiche');
+    };
+
+
   return (
     <header className="bg-white border-b border-green-200 px-6 py-3">
       <div className="flex items-center justify-between">
@@ -51,7 +57,10 @@ export default function Header() {
 
         {/* Icone */}
         <div className="flex items-center space-x-4 relative">
-          <Bell className="text-green-600 cursor-pointer" />
+        <Bell 
+            className="text-green-600 cursor-pointer" 
+            onClick={goToNotifications} 
+          /> 
 
           {/* Menu dinamico per l'utente */}
           <div className="relative">
