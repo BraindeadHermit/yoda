@@ -1,6 +1,6 @@
 // Updated CalendarioIncontri.js with Edit and Delete
 import React, { useState, useEffect } from 'react';
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { fetchMeetingsForMentor, filterDaysWithMeetings, updateMeeting, deleteMeeting } from "@/dao/meetingsDAO"

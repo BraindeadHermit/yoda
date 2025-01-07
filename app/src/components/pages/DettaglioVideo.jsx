@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "../ui/Header";
 import { collection, doc, getDoc, getFirestore } from "firebase/firestore"; 
 import { getStorage, ref, getDownloadURL, connectStorageEmulator } from "firebase/storage"; 
-import app from '@/Firebase/firebase';
+import app from '@/firebase/firebase';
 
 export default function DettaglioVideo() {
   const { id } = useParams();

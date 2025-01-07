@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMeetingDetails } from "@/dao/meetingsDAO";
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 
 function MeetingSummaryMentee() {
   const { meetingid } = useParams(); // Ottiene l'ID del meeting dai parametri dell'URL

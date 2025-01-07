@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";  
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 import { getUserByID } from "@/dao/userDAO"; // Aggiungi l'import delle funzioni DAO
 import { jsPDF } from "jspdf"; // Importa jsPD
 import { useAuth } from "@/auth/auth-context";

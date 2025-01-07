@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import NotificationCard from '@/components/ui/NotificationCard';
 import Header from '@/components/ui/Header';
-import { getByDest, deleteNotifica, getCurrentNotificaId } from '@/dao/notificaDAO';
+import { getByDest, deleteNotifica} from '@/dao/notificaDAO';
 import { useAuth } from '@/auth/auth-context';
 import { initializeMentorship } from '@/dao/mentorshipSessionDAO';
 import {removeExpiredNotifications} from '@/dao/notificaDAO';

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 import { fetchMeetingsForMentee, filterDaysWithMeetings } from "@/dao/meetingsDAO";
 import { useAuth } from '@/auth/auth-context';
 import { Button } from "@/components/ui/button";

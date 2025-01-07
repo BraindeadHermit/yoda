@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"; 
 import { useParams  } from "react-router-dom";
 import { fetchMeetingDetails, updateMeetingMinutes } from "@/dao/meetingsDAO";
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 import { Button } from "@/components/ui/button";
 
 function MeetingSummary() {

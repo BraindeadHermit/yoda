@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Timestamp } from 'firebase/firestore';
 import { createMeeting } from "@/dao/meetingsDAO";
-import Header from "@/components/ui/header";
+import Header from "@/components/ui/Header";
 import { useAuth } from '@/auth/auth-context';
 import { fetchMentorship } from '@/dao/mentorshipSessionDAO';
 
