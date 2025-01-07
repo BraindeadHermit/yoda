@@ -12,7 +12,6 @@ const db = getFirestore(app);
 export default function ChatSupporto() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { chatId, mentorId, problemType } = location.state || {}; // Aggiunto chatId
   const { userId, userType } = useAuth(); // Importa solo le variabili richieste
 
   const [message, setMessage] = useState("");
@@ -22,6 +21,14 @@ export default function ChatSupporto() {
   const [menteeName, setMenteeName] = useState("Mentee Sconosciuto");
   const [mentorName, setMentorName] = useState("Mentore Sconosciuto");
   const [user, setUser] = useState({ nome: "", cognome: "", occupazione: "" });
+  const { chatId, menteeId, mentoreId, menteeNome, mentoreNome, problemType } = location.state || {};
+
+  console.log("🔎 Dati ricevuti:");
+  console.log("📌 chatId:", chatId);
+  console.log("📌 menteeId:", menteeId);
+  console.log("📌 mentoreId:", mentoreId);
+  console.log("📌 menteeNome:", menteeNome);
+  console.log("📌 mentoreNome:", mentoreNome);
 
   if (!userId) {
     console.error("Utente non autenticato.");
@@ -34,23 +41,22 @@ export default function ChatSupporto() {
       try {
         if (!chatId) {
           console.warn("Chat ID non disponibile. Creazione di una nuova chat...");
-          if (!mentorId) {
+          if (!mentoreId) {
             setError("Mentor ID mancante.");
-            navigate("/chat-list");
             return;
           }
 
-          const menteeId = userType === "mentee" ? userId : mentorId;
-          const mentorIdFinal = userType === "mentor" ? userId : mentorId;
+          const menteeId = userType === "mentee" ? userId : mentoreId;
+          const mentorIdFinal = userType === "mentor" ? userId : mentoreId;
 
-          // Creazione della chat
-          const createChatResponse = await createChat(menteeId, mentorIdFinal, "", "");
+          // Creazione della chat con mentorIdFinal o mentoreId
+          const createChatResponse = await createChat(menteeId, mentorIdFinal || mentoreId, "", "");
           if (!createChatResponse.success) {
             throw new Error("Errore nella creazione della chat.");
           }
 
           navigate("/chat-support", {
-            state: { chatId: createChatResponse.id, mentorId: mentorIdFinal, problemType },
+            state: { chatId: createChatResponse.id, mentorId: mentorIdFinal || mentoreId, problemType },
           });
           return;
         }
@@ -78,7 +84,10 @@ export default function ChatSupporto() {
           }
         }
 
-        if (problemType) {
+        // Controllo per problemType
+        if (problemType === undefined) {
+          setMessage(null);
+        } else {
           setMessage("Ciao, ti contatto per il seguente problema: " + problemType);
         }
 
@@ -93,7 +102,9 @@ export default function ChatSupporto() {
     };
 
     initChat();
-  }, [chatId, mentorId, userId, userType, navigate, problemType]);
+  }, [chatId, mentoreId, userId, userType, navigate, problemType]); // Aggiunto mentoreId come dipendenza
+
+ // Aggiunto mentoreId come dipendenza
 
   const handleSendMessage = async () => {
     if (!message.trim() || !chatId) {

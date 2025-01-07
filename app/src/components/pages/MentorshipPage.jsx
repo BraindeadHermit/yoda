@@ -19,9 +19,10 @@ const MentorshipPage = () => {
             if (userId) {
                 try {
                     const sessions = await fetchMentorship(userId);
+                    console.log("📌 Dati ricevuti da Firestore:", sessions);
                     setMentorshipSessions(sessions);
                 } catch (error) {
-                    alert("Errore nel caricamento delle sessioni mentorship:" +  error);
+                    alert("Errore nel caricamento delle sessioni mentorship:" + error);
                 } finally {
                     setLoading(false);
                 }
@@ -44,7 +45,35 @@ const MentorshipPage = () => {
         const route = userType === "mentor" ? `/dettagli/${session.menteeId}` : `/dettagli/${session.mentoreId}`;
         navigate(route);
     };
-
+    const handleMessageClick = (session) => {
+        console.log("📩 handleMessageClick chiamato con session:", session);
+    
+        const chatId = session.chatId || null;
+        const menteeId = session.menteeId;
+        const mentoreId = session.mentoreId;
+        const menteeNome = session.menteeNome;
+        const mentoreNome = session.mentoreNome;
+    
+        console.log("📌 Dati che verranno passati a navigate:");
+        console.log("  🔹 chatId:", chatId);
+        console.log("  🔹 menteeId:", menteeId);
+        console.log("  🔹 mentoreId:", mentoreId);
+        console.log("  🔹 menteeNome:", menteeNome);
+        console.log("  🔹 mentoreNome:", mentoreNome);
+    
+        navigate("/chat-support", {
+            state: {
+                chatId,
+                menteeId,
+                mentoreId,
+                menteeNome,
+                mentoreNome
+            },
+        });
+    
+        console.log("✅ Navigazione avviata verso /chat-support");
+    };
+    
     const handleCloseSession = async (sessionId) => {
         try {
             await closeMentorshipSession(sessionId);
@@ -86,9 +115,8 @@ const MentorshipPage = () => {
                             return (
                                 <Card
                                     key={session.id}
-                                    className={`transition-all duration-200 ${
-                                        expandedCard === session.id ? "shadow-lg" : "shadow"
-                                    }`}
+                                    className={`transition-all duration-200 ${expandedCard === session.id ? "shadow-lg" : "shadow"
+                                        }`}
                                 >
                                     <CardHeader
                                         className="cursor-pointer"
@@ -132,7 +160,10 @@ const MentorshipPage = () => {
                                                         <Calendar className="h-4 w-4 mr-2" />
                                                         Schedule
                                                     </Button>
-                                                    <Button variant="outline" className="flex-1">
+                                                    <Button
+                                                        variant="outline"
+                                                        className="flex-1"
+                                                        onClick={() => handleMessageClick(session)}>
                                                         <MessageSquare className="h-4 w-4 mr-2" />
                                                         Message
                                                     </Button>

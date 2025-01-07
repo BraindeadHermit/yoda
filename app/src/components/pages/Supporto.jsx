@@ -91,16 +91,16 @@ export default function SupportPage() {
         <div className="space-y-4">
           <h2 className="text-3xl font-semibold text-white">Mentori Disponibili</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {mentors.map((mentor) => (
-              <Card key={mentor.id} className="shadow-lg transition-transform transform hover:scale-105">
+            {mentors.map((mentore) => (
+              <Card key={mentore.id} className="shadow-lg transition-transform transform hover:scale-105">
                 <CardContent className="p-6">
                   <h3 className="text-lg font-bold text-gray-800">
-                    {mentor.nome} {mentor.cognome}
+                    {mentore.nome} {mentore.cognome}
                   </h3>
-                  <p className="text-sm text-gray-600">Occupazione: {mentor.occupazione}</p>
+                  <p className="text-sm text-gray-600">Occupazione: {mentore.occupazione}</p>
                   <p className="text-sm text-gray-600">Competenze:</p>
                   <ul className="mb-4 list-disc pl-5 text-sm text-gray-700">
-                    {(mentor.competenze.split(",") || [mentor.competenze]).map((competenza, index) => (
+                    {(mentore.competenze.split(",") || [mentore.competenze]).map((competenza, index) => (
                       <li key={index}>{competenza.trim()}</li>
                     ))}
                   </ul>
@@ -119,12 +119,12 @@ export default function SupportPage() {
                         console.warn("Devi selezionare un problema prima di contattare un mentore.");
                         return;
                       }
-                      if (!mentor.id) {
+                      if (!mentore.id) {
                         console.error("Mentor ID non disponibile.");
                         return;
                       }
                       navigate("/chat-support", {
-                        state: { mentorId: mentor.id, problemType: selectedProblem }, // Passa mentorId e problemType come stato
+                        state: { mentoreId: mentore.id, problemType: selectedProblem }, // Passa mentorId e problemType come stato
                       });
                     }}
                     disabled={!selectedProblem} // Disabilita se nessun problema è selezionato
