@@ -78,137 +78,142 @@ const MentorshipPage = () => {
     };
 
     if (loading) {
-        return <p>Caricamento delle sessioni di mentorship...</p>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7]">
+                <p className="text-xl font-medium text-white animate-pulse">
+                    Caricamento delle sessioni di mentorship...
+                </p>
+            </div>
+        );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-emerald-700 to-emerald-50">
+        <div className="min-h-screen bg-gradient-to-br from-[#178563] to-[#edf2f7]">
             <Header />
-
-            <div className="container px-4 py-8">
-                <h1 className="text-2xl font-bold text-white mb-6">Le Tue Sessioni di Mentorship</h1>
-                <div className="space-y-4">
+            <div className="container mx-auto p-6">
+                <h1 className="text-4xl font-bold mb-6 text-white tracking-tight">
+                    Le Tue Sessioni di Mentorship
+                </h1>
+                <div className="bg-white shadow-lg rounded-lg p-8">
                     {mentorshipSessions.length > 0 ? (
-                        mentorshipSessions.map((session) => {
-                            const isMentee = userType === "mentee";
-                            const displayName = isMentee
-                                ? `${session.mentoreNome} ${session.mentoreCognome}`
-                                : `${session.menteeNome} ${session.menteeCognome}`;
-                            const displayLabel = isMentee ? "Mentore" : "Mentee";
+                        <div className="space-y-6">
+                            {mentorshipSessions.map((session) => {
+                                const isMentee = userType === "mentee";
+                                const displayName = isMentee
+                                    ? `${session.mentoreNome} ${session.mentoreCognome}`
+                                    : `${session.menteeNome} ${session.menteeCognome}`;
+                                const displayLabel = isMentee ? "Mentore" : "Mentee";
 
-                            const initials = displayName
-                                .split(" ")
-                                .map((word) => word[0])
-                                .join("")
-                                .toUpperCase();
+                                const initials = displayName
+                                    .split(" ")
+                                    .map((word) => word[0])
+                                    .join("")
+                                    .toUpperCase();
 
-                            return (
-                                <Card
-                                    key={session.id}
-                                    className={`transition-all duration-200 ${expandedCard === session.id ? "shadow-lg" : "shadow"
-                                        }`}
-                                >
-                                    <CardHeader
-                                        className="cursor-pointer"
-                                        onClick={() => toggleCard(session.id)}
+                                return (
+                                    <div
+                                        key={session.id}
+                                        className={`flex flex-col rounded-lg shadow-md transition-transform transform hover:scale-105 cursor-pointer bg-white border ${
+    expandedCard === session.id ? "border-l-8 border-green-500" : "border-l-4 border-gray-200"
+} p-6`}
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-emerald-700 text-white flex items-center justify-center text-lg font-bold">
+                                        <div
+                                            className="flex items-center justify-between cursor-pointer"
+                                            onClick={() => toggleCard(session.id)}
+                                        >
+                                            <div className="flex items-center space-x-4">
+                                                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#178563] to-[#22A699] flex items-center justify-center text-white text-lg font-bold">
                                                     {initials}
                                                 </div>
-                                                <span className="font-medium">
-                                                    {displayLabel}: {displayName}
-                                                </span>
-                                            </div>
-                                            {expandedCard === session.id ? (
-                                                <ChevronUp className="h-5 w-5 text-gray-500" />
-                                            ) : (
-                                                <ChevronDown className="h-5 w-5 text-gray-500" />
-                                            )}
-                                        </div>
-                                    </CardHeader>
-                                    {expandedCard === session.id && (
-                                        <CardContent className="pt-0">
-                                            <div className="space-y-6">
                                                 <div>
-                                                    <h3 className="text-sm font-semibold text-emerald-700 mb-2">
-                                                        Dettagli della Sessione
+                                                    <h3 className="text-xl font-semibold text-gray-900">
+                                                        {displayLabel}: {displayName}
                                                     </h3>
-                                                    <p>
-                                                        <strong>Data di Creazione:</strong>{" "}
-                                                        {session.createdAt?.seconds
-                                                            ? new Date(session.createdAt.seconds * 1000).toLocaleString()
-                                                            : "Data non disponibile"}
-                                                    </p>
-                                                    <p>
-                                                        <strong>Stato:</strong> {session.stato}
+                                                    <p className="text-sm text-gray-500">
+                                                        Stato: {session.stato}
                                                     </p>
                                                 </div>
-                                                <div className="flex gap-3 pt-4 border-t">
-                                                    <Button variant="outline" className="flex-1" onClick={handleScheduleClick}>
-                                                        <Calendar className="h-4 w-4 mr-2" />
+                                            </div>
+                                            {expandedCard === session.id ? (
+                                                <ChevronUp className="h-6 w-6 text-gray-500" />
+                                            ) : (
+                                                <ChevronDown className="h-6 w-6 text-gray-500" />
+                                            )}
+                                        </div>
+                                        {expandedCard === session.id && (
+                                            <div className="mt-4 space-y-4">
+                                                <p className="text-gray-700 text-sm">
+                                                    <strong>Data di Creazione:</strong> {session.createdAt?.seconds ? new Date(session.createdAt.seconds * 1000).toLocaleString() : "Data non disponibile"}
+                                                </p>
+                                                <div className="flex gap-4">
+                                                    <button
+                                                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                                        onClick={handleScheduleClick}
+                                                    >
+                                                        <Calendar className="inline-block h-5 w-5 mr-2" />
                                                         Schedule
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        className="flex-1"
-                                                        onClick={() => handleMessageClick(session)}>
-                                                        <MessageSquare className="h-4 w-4 mr-2" />
+                                                    </button>
+                                                    <button
+                                                        className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                                                        onClick={() => handleMessageClick(session)}
+                                                    >
+                                                        <MessageSquare className="inline-block h-5 w-5 mr-2" />
                                                         Message
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        className="flex-1"
+                                                    </button>
+                                                    <button
+                                                        className="flex-1 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
                                                         onClick={() => handleDetailClick(session)}
                                                     >
-                                                        <FileEdit className="h-4 w-4 mr-2" />
+                                                        <FileEdit className="inline-block h-5 w-5 mr-2" />
                                                         Details
-                                                    </Button>
+                                                    </button>
                                                     {userType === "mentor" && session.stato === "Attiva" && (
-                                                        <Button
-                                                            variant="destructive"
-                                                            className="flex-1"
+                                                        <button
+                                                            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                                                             onClick={() => handleCloseSession(session.id)}
                                                         >
-                                                            <XCircle className="h-4 w-4 mr-2" />
-                                                            Chiudi Sessione
-                                                        </Button>
+                                                            <XCircle className="inline-block h-5 w-5 mr-2" />
+                                                            Chiudi
+                                                        </button>
                                                     )}
                                                 </div>
                                             </div>
-                                        </CardContent>
-                                    )}
-                                </Card>
-                            );
-                        })
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
                     ) : (
-                        <p className="text-white">Nessuna sessione di mentorship trovata.</p>
+                        <p className="text-center text-gray-500 text-lg">
+                            Nessuna sessione di mentorship trovata.
+                        </p>
                     )}
-                    <button
-                        onClick={() => navigate("/chat-list")}
-                        className="fixed bottom-8 right-8 z-50 flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold rounded-full shadow-lg transition duration-300"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="w-6 h-6 mr-2"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M8 10h.01M12 10h.01M16 10h.01M21 16.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5M21 12.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5m16 0c0 2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5m16 0c0-2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5"
-                            />
-                        </svg>
-                        Chat Mentorship
-                    </button>
                 </div>
+                <button
+    onClick={() => navigate("/chat-list")}
+    className="fixed bottom-8 right-8 z-50 flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold rounded-full shadow-lg transition duration-300"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2}
+        stroke="currentColor"
+        className="w-6 h-6 mr-2"
+    >
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M8 10h.01M12 10h.01M16 10h.01M21 16.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5M21 12.938c0 2.485-3.582 4.5-8 4.5s-8-2.015-8-4.5m16 0c0 2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5m16 0c0-2.485-3.582-4.5-8-4.5s-8 2.015-8 4.5"
+        />
+    </svg>
+    Lista Chat
+</button>
+
             </div>
         </div>
     );
 };
 
 export default MentorshipPage;
+
