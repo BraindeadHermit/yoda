@@ -28,9 +28,20 @@ import Menteestatistics from './components/pages/mentee-statistics';
 import CalendarioIncontriMentee from './components/pages/CalendarioIncontriMentee';
 import NotificationsPage from "@/components/pages/Notifica";
 import MentorshipPage from './components/pages/MentorshipPage';
+import Error404 from "./components/pages/Error404";
+import Error500 from "./components/pages/Error500";
+import Error403 from "./components/pages/Error403";
+import populateDatabase from "./populateFirebase"; // Importa la funzione di popolamento
+import React, { useEffect } from "react";
 
-function App() {
+const App = () => { 
   const db = app;
+
+   useEffect(() => {
+    // Popola il database all'avvio del progetto
+    populateDatabase();
+  }, []);
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -60,6 +71,10 @@ function App() {
             <Route path="/chat-list" element={<ChatListPage />} />
             <Route path="/MeetingSummaryMentee/:meetingid" element={<MeetingSummaryMentee />} />
             <Route path="/notifiche" element={<NotificationsPage />} />
+            <Route path="/error/404" element={<Error404 />} />
+            <Route path="/error/500" element={<Error500 />} />
+            <Route path="/error/403" element={<Error403 />} />
+            <Route path="*" element={<Error404 />} />
           </Route>
           <Route element={<PrivateRoutes roles={["mentor"]}/>}>
             <Route path="/addfile" element={<FileAddDocument />} />
