@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginPage from './components/pages/LoginPage';
 import { MentorSearchForm } from './components/pages/mentor-search-form';
 import FileHomePage from './components/pages/FileHomePage';
-import FileAddDocument from './components/pages/fileAddDocument';
+import FileAddDocument from './components/pages/FileAddDocument';
 import InserireVideo from './components/pages/InserireVideo';
 import Video from './components/pages/Video';  // Componente per la lista dei video
 import DettaglioVideo from './components/pages/DettaglioVideo';
