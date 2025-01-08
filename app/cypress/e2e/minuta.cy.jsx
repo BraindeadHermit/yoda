@@ -1,4 +1,6 @@
-describe('YO-TC-4: Schedulazione dei meeting', () => {
+// YO-TC-5 Test Case: Immissione della Minuta
+
+describe('YO-TC-5: Immissione della Minuta in una sessione di mentorship', () => {
     before(() => {
         // Pre-condizioni: Login come Mentore e Mentee
         cy.visit('http://localhost:5173/login');
@@ -80,24 +82,37 @@ describe('YO-TC-4: Schedulazione dei meeting', () => {
 
         // Verifica di essere stati ridiretti alla pagina corretta
         cy.url().should("include", "/Calendar");
-
+        
         cy.wait(2000);
 
-        cy.get('Button').contains('+ Aggiungi Incontro').click();
-        cy.get('#date').type('2024-11-05');
-        cy.get('#time').type('18:00');
-        cy.get("input[placeholder='Argomento']")
+        cy.get('Button').contains('Post-Meeting').click()
+        // Compila il campo "Riepilogo dell'Incontro"
+        cy.get("textarea[placeholder='Aggiungi un riepilogo']")
             .should("be.visible")
-            .type("Non ci sono argomenti", { delay: 50 });
-        cy.get('select#participant').select('Danilo Cascone');
-        cy.get("textarea[placeholder='Descrizione']")
+            .type("Esempio di riepilogo dell'incontro", { delay: 50 });
+
+        // Compila il campo "Informazioni Aggiuntive"
+        cy.get("textarea[placeholder='Aggiungi informazioni aggiuntive']")
             .should("be.visible")
-            .type("Descrizione dettagliata", { delay: 50 });
+            .type("Esempio di informazioni aggiuntive", { delay: 50 });
+
+        // Compila il campo "Note e Feedback"
+        cy.get("textarea[placeholder='Aggiungi una nuova nota...']")
+            .should("be.visible")
+            .type("Esempio di nota e feedback", { delay: 50 });
+
+        // Clicca sul pulsante "Invia Dati"
         cy.get("button")
-            .contains("Programma incontro")
+            .contains("Invia Dati")
             .should("be.visible")
             .click();
-        
+
+        // Verifica che il messaggio di successo sia visibile
+        cy.contains("Informazioni salvate con successo!")
+            .should("be.visible")
+            .and("contain.text", "Informazioni salvate con successo!");
     });
+
+
 
 });
