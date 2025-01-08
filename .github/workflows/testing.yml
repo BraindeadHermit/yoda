@@ -22,17 +22,27 @@ env:
   NEXT_PUBLIC_MEASUREMENT_ID: ${{ secrets.MEASUREMENT_ID }}
 
 jobs:
-  cypress-run:
+  build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/
+
+
+    strategy:
+      matrix:
+        node-version: [22.x, 23.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-        with:
-          working-directory: ./app/
-          component: true
-          build: npm run build
+     - uses: actions/checkout@v3
+     - name: Use Node.js ${{ matrix.node-version }}
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ matrix.node-version }}
+         cache: 'npm'
+         cache-dependency-path: './app/package-lock.json'
+     - name: install dependencies
+       run: npm ci
+     - name: Unit Tests
+       run: npm run test
