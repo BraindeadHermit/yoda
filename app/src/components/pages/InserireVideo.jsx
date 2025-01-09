@@ -6,10 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
-import { collection, addDoc, getFirestore } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { uploadVideo } from '@/dao/InserireVideoDao'; // Importa la funzione dal file Dao
 import app, { storage } from '@/firebase/firebase'; // Assicurati che storage venga importato
 import { useAuth } from '@/auth/auth-context'; // Assicurati di importare il contesto di autenticazione
+import { getFirestore } from 'firebase/firestore';
 
 export default function InserireVideo() {
   const { userType } = useAuth(); // Ottieni il tipo di utente dal contesto di autenticazione
@@ -37,64 +37,24 @@ export default function InserireVideo() {
     }
   }, [userType, navigate]);
 
-  async function onSubmit(event) {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    setUploading(true);
-    setVideoError('');
-    setTitleError('');
-    setDescriptionError('');
-    setUploadSuccess(false);
 
-    if (!title) {
-      setTitleError('Il titolo è obbligatorio!');
-      setUploading(false);
-      return;
-    }
-
-    if (!description) {
-      setDescriptionError('La descrizione è obbligatoria!');
-      setUploading(false);
-      return;
-    }
-
-    if (!videoUrl && !videoFile) {
-      setVideoError('Devi compilare almeno uno dei due campi: URL o file video!');
-      setUploading(false);
-      return;
-    }
-    if (videoUrl && videoFile) {
-      setVideoError('Riempi solo 1 campo: URL o file video!');
-      setUploading(false);
-      return;
-    }
-
-    try {
-      let uploadedVideoUrl = videoUrl;
-
-      if (videoFile) {
-        const storageRef = ref(storage, `videos/${videoFile.name}`);
-        await uploadBytes(storageRef, videoFile);
-        uploadedVideoUrl = await getDownloadURL(storageRef);
-      }
-
-      const videoData = {
-        title,
-        description,
-        thumbnail: "default-thumbnail-url",
-        videoUrl: uploadedVideoUrl,
-      };
-
-      await addDoc(collection(db, "videos"), videoData);
-      setUploadSuccess(true);
-      setTimeout(() => navigate('/videos'), 3000);
-
-    } catch (error) {
-      console.error("Errore durante il caricamento del video:", error);
-      alert('Errore durante il salvataggio del video.');
-    } finally {
-      setUploading(false);
-    }
-  }
+    await uploadVideo({
+      title,
+      description,
+      videoFile,
+      videoUrl,
+      setUploading,
+      setVideoError,
+      setTitleError,
+      setDescriptionError,
+      setUploadSuccess,
+      navigate,
+      db,
+      storage,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white">
