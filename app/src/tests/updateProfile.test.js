@@ -124,7 +124,7 @@ describe("Funzioni per aggiornare il profilo e gestire il CV", () => {
         competenze: "Sviluppo siti web",
         field: "Sviluppo Software",
         portfolioProjects: [
-          { description: "Descrizione del primo progetto", name: "Progetto Uno", url: "https://progetto-uno.com" },
+          { description: "Applicazione per la vendita di accessori per animali.", name: "Web App Animal Shop", url: "github.com/animalshop" },
         ],
       };
 
