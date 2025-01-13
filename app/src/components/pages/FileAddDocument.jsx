@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import Header from '@/components/ui/Header'  // Import dell'header
+import Header from '@/components/ui/Header' // Import dell'header
 import { getAuth } from "firebase/auth"
-import { getFirestore, collection, addDoc } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import app from '../../firebase/firebase' // Import di Firebase
+import { addNewDocument } from "@/dao/contenutiDAO" // Import del DAO
 
 export default function UploadForm() {
   const [fileName, setFileName] = useState('')
@@ -18,7 +18,6 @@ export default function UploadForm() {
   const [role, setRole] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const db = getFirestore(app)
   const auth = getAuth(app)
   const storage = getStorage(app) // Inizializza Firebase Storage
 
@@ -56,16 +55,15 @@ export default function UploadForm() {
     }
 
     try {
+      // Caricamento del file su Firebase Storage
       const fileRef = ref(storage, 'documents/' + file.name)
-      console.log("Tentativo di caricamento del file su Firebase Storage:", fileRef)
-
       await uploadBytes(fileRef, file)
-      console.log("File caricato con successo su Firebase Storage")
 
+      // Ottieni l'URL del file caricato
       const fileUrl = await getDownloadURL(fileRef)
-      console.log("URL generato per il file:", fileUrl)
 
-      await addDoc(collection(db, 'documents'), {
+      // Utilizza il DAO per salvare i dati del documento
+      await addNewDocument({
         title,
         author: user.displayName || user.email,
         role,
@@ -75,9 +73,7 @@ export default function UploadForm() {
         filePath: fileUrl, // URL del file caricato
       })
 
-      console.log("Documento aggiunto a Firestore con successo")
       alert('Caricamento completato!')
-
       setTitle('')
       setRole('')
       setFileName('')
