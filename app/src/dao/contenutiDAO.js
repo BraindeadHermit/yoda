@@ -61,3 +61,10 @@ export async function getAllDocuments() {
     throw new Error("Errore durante il recupero dei documenti.");
   }
 }
+
+/**
+ * Alias per uploadDocument per coerenza con il nome utilizzato.
+ */
+export async function addNewDocument(data, file) {
+  return uploadDocument(data, file);
+}
