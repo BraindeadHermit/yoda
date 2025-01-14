@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); 
 // Configura Firebase Storage
 const storage = getStorage(app);
-if (window.location.hostname === "localhost") {
+if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     // Connetti l'emulatore di Firebase Storage alla porta 9199
     connectStorageEmulator(storage, "localhost", 9199);
 }

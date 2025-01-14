@@ -145,6 +145,12 @@ export default function Header() {
                 >
                   <span className="font-semibold">Supporto</span>
                 </Link>
+                <Link
+                  to="/Menteestatistics"
+                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <span className="font-semibold">Le mie statistiche</span>
+                </Link>
               </div>
             )}
           </div>

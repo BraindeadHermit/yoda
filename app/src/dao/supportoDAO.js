@@ -1,6 +1,6 @@
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore"; // Assicurati che query sia importato
 
-
+const db = getFirestore();
 /**
  * Recupera tutti i mentori dal database.
  * @returns {Promise<Object>} - Un oggetto contenente il successo e i dati o l'errore.
