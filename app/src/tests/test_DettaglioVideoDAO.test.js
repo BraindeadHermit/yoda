@@ -1,5 +1,5 @@
 import { describe, it, vi, expect, beforeEach } from "vitest";
-import { fetchVideoDetails } from "@/dao/DettaglioVideoDAO";
+import { fetchVideoDetails } from "@/dao/DettaglioVideoDao";
 import { doc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 

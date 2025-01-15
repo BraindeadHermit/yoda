@@ -4,7 +4,7 @@ import Header from "../ui/Header";
 import { getFirestore } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import app from '@/firebase/firebase';
-import { isValidURL, fetchVideoDetails } from '@/dao/DettaglioVideoDAO'; // Importa le funzioni
+import { isValidURL, fetchVideoDetails } from '@/dao/DettaglioVideoDao'; // Importa le funzioni
 
 export default function DettaglioVideo() {
   const { id } = useParams();
