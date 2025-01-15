@@ -22,7 +22,7 @@ function ProgettoDettaglio() {
     );
   }
 
-  const { title, description, url } = project;
+  const { title, description, url, idUtente } = project;
   console.log(project);
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white text-black">
@@ -54,7 +54,7 @@ function ProgettoDettaglio() {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Link del Progetto</h3>
                   <a
-                    href={url}
+                    href={url.startsWith('http') ? url : `https://${url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#178563] underline hover:text-[#13674c] transition-all"
@@ -66,7 +66,7 @@ function ProgettoDettaglio() {
 
               {/* Bottone per tornare al portfolio */}
               <div className="mt-6 flex justify-end">
-                <Button className="bg-[#178563] text-white hover:bg-[#13674c]" onClick={() => navigate('/portfolio')}>
+                <Button className="bg-[#178563] text-white hover:bg-[#13674c]" onClick={() => navigate(`/dettagli/${idUtente}`)}>
                   Torna al Portfolio
                 </Button>
               </div>

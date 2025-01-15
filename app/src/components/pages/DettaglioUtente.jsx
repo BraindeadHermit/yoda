@@ -172,6 +172,7 @@ async function handleRichiestaMentorship(user) {
                         title: project.name || "Progetto senza nome",
                         description: project.description || "Descrizione non disponibile",
                         url: project.url || null,
+                        idUtente: user.id
                       }}
                     >
                       <div className="flex justify-between items-center">
