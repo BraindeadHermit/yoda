@@ -28,6 +28,7 @@ import Menteestatistics from './components/pages/mentee-statistics';
 import CalendarioIncontriMentee from './components/pages/CalendarioIncontriMentee';
 import NotificationsPage from "@/components/pages/Notifica";
 import MentorshipPage from './components/pages/MentorshipPage';
+import ProgettoDettaglio from './components/pages/DettaglioProgetto';
 
 function App() {
   const db = app;
@@ -60,6 +61,7 @@ function App() {
             <Route path="/chat-list" element={<ChatListPage />} />
             <Route path="/MeetingSummaryMentee/:meetingid" element={<MeetingSummaryMentee />} />
             <Route path="/notifiche" element={<NotificationsPage />} />
+            <Route path="/dettaglio-progetto" element={<ProgettoDettaglio />} />
           </Route>
           <Route element={<PrivateRoutes roles={["mentor"]}/>}>
             <Route path="/addfile" element={<FileAddDocument />} />

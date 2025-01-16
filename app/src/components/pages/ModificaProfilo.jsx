@@ -557,7 +557,7 @@ function ModificaProfilo() {
                           setNewProject((prev) => ({ ...prev, url: e.target.value }))
                         }
                       />
-                      <Button
+                      <Button id="plus"
                         type="button"
                         onClick={handleAddProject}
                         className="bg-[#178563] text-white hover:bg-[#178563]/90"
