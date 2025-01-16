@@ -38,6 +38,19 @@ export async function getCurrentUserUID() {
  */
 export async function updateUserProfile(uid, profileData) {
   try {
+    // Espressioni regolari per validare i campi
+    const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s']{1,100}$/;
+    const surnameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s']{1,100}$/;
+
+    // Validazione dei campi
+    if (profileData.nome && !nameRegex.test(profileData.nome)) {
+      throw new Error("Il campo 'Nome' non è valido. Assicurati che rispetti i criteri.");
+    }
+
+    if (profileData.cognome && !surnameRegex.test(profileData.cognome)) {
+      throw new Error("Il campo 'Cognome' non è valido. Assicurati che rispetti i criteri.");
+    }
+
     // Riferimento al documento dell'utente nella collezione 'utenti' in Firestore
     const userDocRef = doc(db, 'utenti', uid);
 
@@ -49,8 +62,7 @@ export async function updateUserProfile(uid, profileData) {
     // Ritorna un oggetto di successo
     return { success: true };
   } catch (error) {
-    console.error('Errore durante l\'aggiornamento del profilo:', error);
-
+    console.error("Errore durante l'aggiornamento del profilo:", error);
     // Ritorna un oggetto di errore
     return { success: false, error: error.message };
   }

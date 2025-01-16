@@ -138,4 +138,95 @@ describe("Funzioni per aggiornare il profilo e gestire il CV", () => {
       expect(result).toEqual({ success: true });
     });
   });
+  describe("Validazione dei campi nella funzione updateUserProfile", () => {
+    test("Dovrebbe lanciare un errore se il campo 'nome' contiene caratteri non validi", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "G1orgio!", // Nome non valido
+        cognome: "Leo",
+      };
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({
+        success: false,
+        error: "Il campo 'Nome' non è valido. Assicurati che rispetti i criteri.",
+      });
+    });
+  
+    test("Dovrebbe lanciare un errore se il campo 'cognome' contiene caratteri non validi", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "Giorgio",
+        cognome: "L3o!", // Cognome non valido
+      };
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({
+        success: false,
+        error: "Il campo 'Cognome' non è valido. Assicurati che rispetti i criteri.",
+      });
+    });
+  
+    test("Dovrebbe accettare valori validi per 'nome' e 'cognome'", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "Giorgio",
+        cognome: "Leo",
+      };
+  
+      doc.mockReturnValueOnce({ id: uid });
+      updateDoc.mockResolvedValueOnce();
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({ success: true });
+    });
+  
+    test("Dovrebbe accettare nomi con spazi e caratteri speciali validi", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "Jean'Luc",
+        cognome: "D'Orazio",
+      };
+  
+      doc.mockReturnValueOnce({ id: uid });
+      updateDoc.mockResolvedValueOnce();
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({ success: true });
+    });
+  
+    test("Dovrebbe accettare cognomi lunghi entro il limite di 100 caratteri", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "Giovanni",
+        cognome: "A".repeat(100), // Cognome con 100 caratteri
+      };
+  
+      doc.mockReturnValueOnce({ id: uid });
+      updateDoc.mockResolvedValueOnce();
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({ success: true });
+    });
+  
+    test("Dovrebbe lanciare un errore se il cognome supera il limite di 100 caratteri", async () => {
+      const uid = "user123";
+      const profileData = {
+        nome: "Giovanni",
+        cognome: "A".repeat(101), // Cognome con 101 caratteri
+      };
+  
+      const result = await updateUserProfile(uid, profileData);
+  
+      expect(result).toEqual({
+        success: false,
+        error: "Il campo 'Cognome' non è valido. Assicurati che rispetti i criteri.",
+      });
+    });
+  });
 });
