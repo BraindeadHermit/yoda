@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../ui/Header";
-import { collection, doc, getDoc, getFirestore } from "firebase/firestore"; 
-import { getStorage, ref, getDownloadURL, connectStorageEmulator } from "firebase/storage"; 
+import { getFirestore } from "firebase/firestore";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 import app from '@/firebase/firebase';
+import { isValidURL, fetchVideoDetails } from '@/dao/DettaglioVideoDao'; // Importa le funzioni
 
 export default function DettaglioVideo() {
   const { id } = useParams();
@@ -17,43 +18,9 @@ export default function DettaglioVideo() {
     connectStorageEmulator(storage, 'localhost', 9199); // Porta dell'emulatore di Firebase Storage
   }
 
-  // Funzione per verificare se l'URL è valido
-  function isValidURL(url) {
-    try {
-      new URL(url);  // Prova a creare un URL per vedere se è valido
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   useEffect(() => {
-    async function fetchVideoDetails() {
-      try {
-        const docRef = doc(db, "videos", id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const videoData = { id: docSnap.id, ...docSnap.data() };
-          setVideo(videoData);
-
-          // Se il video è stato caricato come file (e non come URL), ottieni l'URL dal Firebase Storage
-          if (videoData.videoFile) {
-            const videoRef = ref(storage, `videos/${videoData.videoFile.name}`); // Nome del file video
-            const videoUrl = await getDownloadURL(videoRef);
-            setVideo((prevVideo) => ({ ...prevVideo, videoUrl })); // Aggiungi l'URL del video al videoData
-          }
-        } else {
-          console.error("Video non trovato");
-        }
-      } catch (error) {
-        console.error("Errore nel caricamento del video:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchVideoDetails();
+    // Chiamata alla funzione che recupera i dettagli del video
+    fetchVideoDetails(id, db, storage, setVideo, setLoading);
   }, [id]);
 
   if (loading) {
@@ -86,7 +53,6 @@ export default function DettaglioVideo() {
 
           <div className="relative aspect-video bg-gray-100 rounded-md overflow-hidden mb-6">
             {hasValidUrl ? (
-              // Se il video ha un URL valido (YouTube, Vimeo, ecc.)
               <iframe
                 width="100%"
                 height="100%"
@@ -97,7 +63,6 @@ export default function DettaglioVideo() {
                 allowFullScreen
               ></iframe>
             ) : hasValidFile ? (
-              // Se il video è stato caricato come file
               <video controls className="object-cover w-full h-full">
                 <source
                   src={video.videoUrl} // Video file caricato
@@ -106,7 +71,6 @@ export default function DettaglioVideo() {
                 />
               </video>
             ) : (
-              // Se nessuno dei due è valido, mostra un'immagine di fallback
               <img
                 src="/fallback-image.jpg"
                 alt="Video non disponibile"

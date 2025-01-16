@@ -2,34 +2,18 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../ui/Header";
 import VideoCard from "../ui/VideoCard"; // Importa VideoCard
-import { getDocs, collection, getFirestore } from "firebase/firestore";
-import app from '@/firebase/firebase';
 import { useAuth } from "@/auth/auth-context"; // Importa il contesto di autenticazione
+import { fetchVideos } from "@/dao/VideoDAO"; // Importa la funzione da VideoDAO.js
 
 export default function Video() {
   const { userType } = useAuth(); // Ottieni il ruolo dell'utente dal contesto
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const db = getFirestore(app);
 
   useEffect(() => {
-    async function fetchVideos() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "videos"));
-        const videosData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setVideos(videosData);
-      } catch (error) {
-        console.error("Errore nel caricamento dei dati:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchVideos();
-  }, []);
+    // Richiama la funzione fetchVideos dal VideoDAO.js
+    fetchVideos(setVideos, setLoading);
+  }, []); // Viene eseguito solo al primo render
 
   return (
     <div
