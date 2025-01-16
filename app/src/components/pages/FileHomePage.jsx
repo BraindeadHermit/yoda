@@ -1,35 +1,30 @@
-import { useEffect, useState } from 'react'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
-import app from '../../firebase/firebase' // Import dell'istanza di Firebase
-import Header from '@/components/ui/Header'
+import { useEffect, useState } from 'react';
+import Header from '@/components/ui/Header';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Link } from 'react-router-dom'
-import { useAuth } from '@/auth/auth-context'
+} from "@/components/ui/card";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/auth/auth-context';
+import { getAllDocuments } from "@/dao/contenutiDAO"; // Import del DAO
 
 export default function DocumentLibrary() {
-  const [documents, setDocuments] = useState([])
-  const {userType} = useAuth();
+  const [documents, setDocuments] = useState([]);
+  const { userType } = useAuth();
+
   useEffect(() => {
-    const db = getFirestore(app) // Inizializza Firestore
     const fetchDocuments = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'documents'))
-        const docs = querySnapshot.docs.map(doc => ({
-          ...doc.data(),  // Estrarre i dati dal documento
-          id: doc.id      // Aggiungere l'ID del documento
-        }))
-        setDocuments(docs) // Impostare i dati nello stato
+        const docs = await getAllDocuments(); // Utilizza il DAO per ottenere i documenti
+        setDocuments(docs);
       } catch (error) {
-        console.error('Errore nel recupero dei documenti: ', error)
+        console.error('Errore nel recupero dei documenti: ', error);
       }
-    }
-    fetchDocuments()
-  }, [])
+    };
+    fetchDocuments();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#178563] to-white">
@@ -39,16 +34,18 @@ export default function DocumentLibrary() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-semibold text-white mb-6">Contenuti Media</h2>
-        
+
         {/* Add Document Button */}
-        {userType === "mentor" && (<div className="mb-6">
-          <Link
-            to="/addfile"
-            className="bg-[#178563] hover:bg-[#178563]/90 text-white px-4 py-2 rounded-md"
-          >
-            Aggiungi Documento
-          </Link>
-        </div>)}
+        {userType === "mentor" && (
+          <div className="mb-6">
+            <Link
+              to="/addfile"
+              className="bg-[#178563] hover:bg-[#178563]/90 text-white px-4 py-2 rounded-md"
+            >
+              Aggiungi Documento
+            </Link>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {documents.map((doc) => (
@@ -81,5 +78,5 @@ export default function DocumentLibrary() {
         </div>
       </main>
     </div>
-  )
+  );
 }
