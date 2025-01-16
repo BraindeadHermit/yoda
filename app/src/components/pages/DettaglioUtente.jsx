@@ -166,8 +166,14 @@ async function handleRichiestaMentorship(user) {
                   {user.portfolioProjects.map((project, index) => (
                     <Link
                       key={index}
-                      to={`/portfolio/${project.id}`}
+                      to={`/dettaglio-progetto`}
                       className="block bg-[#f9f9f9] p-4 rounded-lg hover:bg-[#f1f1f1] shadow-md transition-all"
+                      state={{
+                        title: project.name || "Progetto senza nome",
+                        description: project.description || "Descrizione non disponibile",
+                        url: project.url || null,
+                        idUtente: user.id
+                      }}
                     >
                       <div className="flex justify-between items-center">
                         <div>
