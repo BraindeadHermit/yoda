@@ -1,0 +1,48 @@
+name: Yoda Tests
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+      - 'feat/**'
+      - 'fix/**'
+
+env:
+  VITE_API_KEY: ${{ secrets.API_KEY }}
+  VITE_AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+  VITE_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  VITE_STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+  VITE_MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+  VITE_APP_ID: ${{ secrets.APP_ID }}
+  VITE_MEASUREMENT_ID: ${{ secrets.MEASUREMENT_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/
+
+
+    strategy:
+      matrix:
+        node-version: [22.x, 23.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        
+    steps:
+     - uses: actions/checkout@v3
+     - name: Use Node.js ${{ matrix.node-version }}
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ matrix.node-version }}
+         cache: 'npm'
+         cache-dependency-path: './app/package-lock.json'
+     - name: install dependencies
+       run: npm ci
+     - name: Unit Tests
+       run: npm run test --reporter=verbose
