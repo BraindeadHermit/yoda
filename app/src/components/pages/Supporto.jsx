@@ -107,7 +107,7 @@ export default function SupportPage() {
                   <Button
                     className="w-full bg-gradient-to-r from-[#22A699] to-[#178563] text-white font-semibold py-2 px-4 rounded-lg hover:scale-105 transition-transform"
                     onClick={() => {
-                      window.location.href = `/dettagli/${mentor.id}`;
+                      window.location.href = `/dettagli/${mentore.id}`;
                     }}
                   >
                     Visualizza Mentore
